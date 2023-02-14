@@ -7,7 +7,7 @@ from requests import get
 import pandas as pd
 
 st.markdown("<h1 style='text-align: center; color: #002967;'>UNHCR</h1>", unsafe_allow_html=True)
-st.markdown("<h1 style='text-align: center; color: #002967;'>App for Streamlit Palindrome</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #002967;'>App String Palindrome</h1>", unsafe_allow_html=True)
 def main():
     # Register pages
     pages = {
@@ -125,7 +125,7 @@ def Palindrome():
     palinwords = 'https://raw.githubusercontent.com/Moly-malibu/UNHCR/main/wordspalid.csv'
     df = pd.read_csv(palinwords)
     words = st.sidebar.selectbox('Palindrome', (df))
-    st.markdown("<h1 style='text-align: center; color: #002967;'>Palindrome of words</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #002967;'>String</h1>", unsafe_allow_html=True)
     word = st.sidebar.selectbox('Done', (df))
     
     if(word == word[: : -1]):
