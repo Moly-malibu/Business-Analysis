@@ -145,7 +145,7 @@ def Palindrome():
             return True
         return is_palindrome
     
-    st.write('***Palindrome***', word)
+    st.write('***Word or String***', word)
     if len(word) % 2 == 0:
         st.write(word[len(word) // 2 - 1:len(word) // 2 + 1])
     else:
