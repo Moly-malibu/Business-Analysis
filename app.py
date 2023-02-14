@@ -149,7 +149,7 @@ def Palindrome():
     st.write("""
     ## Done
     """)
-    st.write('word correct order', )  
+    st.write('middle letter is', )  
 
 if __name__ == "__main__":
    main()
