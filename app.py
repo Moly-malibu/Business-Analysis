@@ -146,6 +146,7 @@ def Palindrome():
         return is_palindrome
     
     st.write('***Word or String***', word)
+    st.write('middle letter is')
     if len(word) % 2 == 0:
         st.write(word[len(word) // 2 - 1:len(word) // 2 + 1])
     else:
