@@ -31,10 +31,10 @@ def Home():
         st.markdown(page_bg_img, unsafe_allow_html=True)
         st.write(
         """
-        Artificial Intelligence helps you to perform a successful future, taking the correct decisions by small Analysis! 
+        Artificial Intelligence helps you to perform a successful future, taking the correct decisions by little effort! 
         ---
 
-        Django API backend. The backend should:
+        App:
 
         1. Check if the input is a palindrome (reads the same both forwards and backwards.
                 
