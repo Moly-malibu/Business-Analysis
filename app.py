@@ -23,7 +23,7 @@ def Home():
         page_bg_img = '''
         <style>
         .stApp {
-        background-image: url("https://images.pexels.com/photos/1024613/pexels-photo-1024613.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1000");
+        background-image: url("https://images.pexels.com/photos/1353938/pexels-photo-1353938.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1000");
         background-size: cover;
         }
         </style>
