@@ -6,7 +6,7 @@ import requests
 from requests import get
 import pandas as pd
 
-st.markdown("<h1 style='text-align: center; color: #002967;'>UNHCR</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #002967;'>Software Engineer</h1>", unsafe_allow_html=True)
 st.markdown("<h1 style='text-align: center; color: #002967;'>App String Palindrome</h1>", unsafe_allow_html=True)
 def main():
     # Register pages
