@@ -1,2 +1,5 @@
 streamlit
 Django
+numpy 
+ydata_profiling 
+ProfileReport

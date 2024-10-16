@@ -5,16 +5,19 @@ import datetime
 import requests
 from requests import get
 import pandas as pd
+import numpy as np
+ 
 
-st.markdown("<h1 style='text-align: center; color: #002967;'>Software Engineer</h1>", unsafe_allow_html=True)
-st.markdown("<h1 style='text-align: center; color: #002967;'>App String Palindrome</h1>", unsafe_allow_html=True)
+
+st.markdown("<h1 style='text-align: center; color: #002967;'>Business Analysis</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #002967;'>Agriculture Crop Production by Countries: Vegetales & Fruits</h1>", unsafe_allow_html=True)
 def main():
     # Register pages
     pages = {
         "Home": Home,
-        "Palindrome": Palindrome,
+        "datainfo": datainfo,
     }
-    st.sidebar.title("Palindrome App")
+    st.sidebar.title("Statistics")
     page = st.sidebar.selectbox("Select Menu", tuple(pages.keys()))
     pages[page]()
 
@@ -34,18 +37,8 @@ def Home():
         Artificial Intelligence helps you to perform a successful future, taking the correct decisions by little effort! 
         ---
 
-        App:
-
-        1. Check if the input is a palindrome (reads the same both forwards and backwards.
-                
-        2. If the input length is odd, find and return the letter in the middle of the string.
-                
-        3. Send appropriate responses to the frontend:
-                Example Input	: 
-                        "racecar" Example Output: "The input 'racecar' is a palindrome and its middle letter is 'e'."
-                Example Input:	 
-                        "hello" Example Output: "The input 'hello' is not a palindrome."
-        ---
+        The aim is to analyze the performance of the Agro-Business industry from 1961 to 2014. Historical data reveals that while the banana industry once faced significant challenges, it has defied initial predictions. Despite forecasts suggesting a bleak future, scientific advancements have played a crucial role in ensuring bananas remain a staple in the global food basket. Although the banana industry has experienced slower growth compared to other sectors within Agribusiness, its resilience over the past six decades is a testament to the power of innovation and adaptation.
+                        ---
         """)
         today = st.date_input('Today is', datetime.datetime.now())
 
@@ -63,7 +56,7 @@ def Home():
             <div class="col l3 s12">
                     <h5 class="white-text">Connect With Me</h5>
                     <ul>
-                        <a href="http://www.monicadatascience.com/" target="#002967" class="white-text">
+                        <a href="/" target="#002967" class="white-text">
                         ❤<i class="❤"></i>
                     </a>
                     <a href="https://www.linkedin.com/in/monica-bustamante-b2ba3781/3" target="#002966" class="white-text">
@@ -73,7 +66,7 @@ def Home():
                     </a>
                     <a href="https://github.com/Moly-malibu/UNHCR.git" target="#002967" class="white-text">
                         <i class="fab fa-github-square fa-4x"></i>
-                    <a href="http://www.monicadatascience.com/" target="#002967" class="white-text">
+                    <a href="/" target="#002967" class="white-text">
                     ❤<i class="❤"></i>
                     </a>
                     </ul>
@@ -82,7 +75,7 @@ def Home():
                 </div>
                 <div class="footer-copyright">
                 <div class="container">
-                <a class="white-text text-lighten-3" href="http://www.monicadatascience.com/">Made by Monica Bustamante</a><br/>
+                <a class="white-text text-lighten-3" href="/">Made by Liliana Bustamante</a><br/>
                 <a class="white-text text" href=""> @Copyrigh</a>
                 </div>
                 </div>
@@ -110,7 +103,7 @@ title_temp = """
 	"""
 components.html(title_temp,height=100)
     
-def Palindrome():
+def datainfo():
     page_bg_img = '''
     <style>
     .stApp {
@@ -120,36 +113,18 @@ def Palindrome():
     </style>
     '''
     st.markdown(page_bg_img, unsafe_allow_html=True)
-    st.markdown("<h1 style='text-align: center; color: #002966;'>Example</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #002966;'>Agricultural Production</h1>", unsafe_allow_html=True)
     
-    palinwords = 'https://raw.githubusercontent.com/Moly-malibu/UNHCR/main/wordspalid.csv'
-    df = pd.read_csv(palinwords)
-    words = st.sidebar.selectbox('Palindrome', (df))
-    st.markdown("<h1 style='text-align: center; color: #002967;'>String</h1>", unsafe_allow_html=True)
-    word = st.sidebar.selectbox('Done', (df))
-    
-    if(word == word[: : -1]):
-        st.write("Is Palindrome")
-    else:
-        st.write("Is Not a Palindrome")
-    
-    def is_palindrome(word): 
-        if len(word) == 0: 
-            return True
-        left = 0
-        right = len(word)-1
-        while (left < right): 
-            if word[left] != word[right]: 
-                return False
-            left += 1; right -= 1
-            return True
-        return is_palindrome
-    
-    st.write('***Word or String***', word)
-    if len(word) % 2 == 0:
-        st.write(word[len(word) // 2 - 1:len(word) // 2 + 1])
-    else:
-        st.write('middle letter is',word[len(word) // 2])
+    df = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1)
+    df.replace(np.nan, 0, inplace=True)
+    info = st.sidebar.selectbox('Data Set Info', (df))
+    st.markdown("<h1 style='text-align: center; color: #002967;'>By Countries</h1>", unsafe_allow_html=True)
+    info = st.sidebar.selectbox('Done', (df))
+    shape=(df.shape)
+    st.write("Dimension DataSet:", shape, "Shape")
+    info= df.describe()
+    st.write("Statistics Report DataSet:", info)
+    st.write("Production by Countries:", df)
 
 
 if __name__ == "__main__":
