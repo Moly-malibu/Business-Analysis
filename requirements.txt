@@ -3,3 +3,4 @@ Django
 numpy 
 ydata_profiling 
 ProfileReport
+scikit-learn

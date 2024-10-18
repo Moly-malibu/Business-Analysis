@@ -6,6 +6,11 @@ import requests
 from requests import get
 import pandas as pd
 import numpy as np
+#import category_encoders as ce
+#from sklearn.impute import SimpleImputer
+#from sklearn.ensemble import RandomForestClassifier
+#from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
  
 
 
@@ -121,10 +126,90 @@ def datainfo():
     st.markdown("<h1 style='text-align: center; color: #002967;'>By Countries</h1>", unsafe_allow_html=True)
     info = st.sidebar.selectbox('Done', (df))
     shape=(df.shape)
-    st.write("Dimension DataSet:", shape, "Shape")
+    
+    st.write("Production by Countries:", df)
+    st.write("Dimension DataSet:", shape, "Shape")  
     info= df.describe()
     st.write("Statistics Report DataSet:", info)
-    st.write("Production by Countries:", df)
+    
+    items = df.groupby(['Item', 'Element', 'Unit']).size().reset_index(name='Products')
+    st.write("Products:", items)
+    
+    items= df['Item'].describe()
+    st.write("Statistic Describe: Targe Products:", items)
+
+    y = df['Item']
+    y.nunique()
+    items = y.value_counts(normalize=True)
+    st.write("Binary Classification: if the classes are imbalanced:", items)
+
+    items= df['Item'].unique()
+    st.write("classification of agricultural products:", items)
+
+    items = df['Item'].value_counts().nlargest(100)
+    st.write("Main agricultural products cultivated:", items)
+
+    df['Item'] = df['Item'].str.lower()
+    blueberries = df['Item'].str.contains('blueberries')
+    gums = df['Item'].str.contains('gums')
+    peppermint = df['Item'].str.contains('peppermint')
+    tallowtree = df['Item'].str.contains('tallowtree')
+    roots = df['Item'].str.contains('roots')
+    vegetablesmelons = df['Item'].str.contains('vegetablesmelons')
+    vegetables = df['Item'].str.contains('vegetables')
+    kola = df['Item'].str.contains('kola')
+    nuts = df['Item'].str.contains('nuts')
+    melons = df['Item'].str.contains('melons')
+    cereals = df['Item'].str.contains('cereals')
+    bananas = df['Item'].str.contains('bananas')
+
+    df.loc[vegetables, 'Item'] = 'vegetables'
+    df.loc[roots, 'Item'] = 'roots'
+    df.loc[kola, 'Item'] = 'kola'
+    df.loc[nuts, 'Item'] = 'nuts'
+    df.loc[melons, 'Item'] = 'melons' 
+    df.loc[cereals, 'Item'] = 'cereals'
+    df.loc[bananas, 'Item'] = 'bananas'
+
+    df.loc[~blueberries & ~gums & ~roots & ~kola & ~nuts & ~melons & ~cereals &
+       ~peppermint & ~tallowtree & ~vegetables & ~vegetablesmelons & ~bananas, 'Item'] = 'Other'
+    items1 = df['Item'].value_counts()
+    st.write("Subclassification:", items1)
+
+    test = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1) 
+    val = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1)  
+    train = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1)
+    train['Item'].mode()   
+
+    test.replace(np.nan, 0, inplace=True)
+    val.replace(np.nan, 0, inplace=True)
+    train.replace(np.nan, 0, inplace=True)
+    train.describe(exclude='number')
+
+    val['Item'].value_counts()
+    bananas = val[val.Item=='Bananas']
+    st.write("Production:", bananas)
+
+    target = 'Element'
+    train[target].value_counts(normalize=True)
+    features = train.select_dtypes('number').columns.drop(target)
+    X_train = train[features]
+    y_train = train[target]
+    X_val = val[features]
+    y_val = val[target]
+    X_test = test[features]
+    y_test = test[target]
+
+    pipeline = make_pipeline(
+        ce.OrdinalEncoder(), 
+        SimpleImputer(strategy='median'), 
+        RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+    )
+
+    # Fit on train, score on val
+    pipeline.fit(X_train, y_train)
+    st.write('Validation Accuracy', pipeline.score(X_val, y_val))
+
 
 
 if __name__ == "__main__":
