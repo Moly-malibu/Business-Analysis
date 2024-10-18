@@ -10,7 +10,7 @@ import numpy as np
 #from sklearn.impute import SimpleImputer
 #from sklearn.ensemble import RandomForestClassifier
 #from sklearn.model_selection import train_test_split
-from sklearn.pipeline import make_pipeline
+#from sklearn.pipeline import make_pipeline
  
 
 
@@ -21,6 +21,7 @@ def main():
     pages = {
         "Home": Home,
         "datainfo": datainfo,
+        "Permutation": Permutation,
     }
     st.sidebar.title("Statistics")
     page = st.sidebar.selectbox("Select Menu", tuple(pages.keys()))
@@ -176,6 +177,7 @@ def datainfo():
     items1 = df['Item'].value_counts()
     st.write("Subclassification:", items1)
 
+def Permutation():
     test = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1) 
     val = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1)  
     train = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1)
