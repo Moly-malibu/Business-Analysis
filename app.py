@@ -222,12 +222,16 @@ def Permutation():
     importances = pd.Series(rf.feature_importances_, X_train.columns)
 
     st.title("Permutation Visualization")
-
-    n = 30
+    n = 10
     plt.figure(figsize=(10,n/2))
     plt.title(f'Top {n} features')
-    importances.sort_values()[-n:].plot.barh(color='Cyan');
+    vis = importances.sort_values()[-n:].plot.barh(color='Cyan');
     
+    
+
+
+
+
    
 
    # Display the plot in Streamlit
