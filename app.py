@@ -6,6 +6,7 @@ import requests
 from requests import get
 import pandas as pd
 import numpy as np
+<<<<<<< HEAD
 import sklearn
 sklearn.set_config(transform_output="pandas")
 import category_encoders as ce
@@ -18,6 +19,15 @@ import itertools
 
  
 
+=======
+#import category_encoders as ce
+#from sklearn.impute import SimpleImputer
+#from sklearn.ensemble import RandomForestClassifier
+#from sklearn.model_selection import train_test_split
+#from sklearn.pipeline import make_pipeline
+ 
+
+>>>>>>> origin/main
 
 st.markdown("<h1 style='text-align: center; color: #002967;'>Business Analysis</h1>", unsafe_allow_html=True)
 st.markdown("<h1 style='text-align: center; color: #002967;'>Agriculture Crop Production by Countries: Vegetales & Fruits</h1>", unsafe_allow_html=True)
@@ -217,6 +227,7 @@ def Permutation():
     pipeline.fit(X_train, y_train)
     st.write('Validation Accuracy', pipeline.score(X_val, y_val))
 
+<<<<<<< HEAD
     # Get feature importances
     rf = pipeline.named_steps['randomforestclassifier']
     importances = pd.Series(rf.feature_importances_, X_train.columns)
@@ -238,6 +249,8 @@ def Permutation():
 
 
      
+=======
+>>>>>>> origin/main
 
 
 if __name__ == "__main__":
