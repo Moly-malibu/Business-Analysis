@@ -3,4 +3,5 @@ Django
 numpy 
 ydata_profiling 
 ProfileReport
-scikit-learn
+scikit-learn==1.2.2
+category-encoders==1.3.0 
