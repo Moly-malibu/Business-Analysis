@@ -13,6 +13,9 @@ from sklearn.impute import SimpleImputer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
+import matplotlib.pyplot as plt
+import itertools
+
  
 
 
@@ -218,13 +221,17 @@ def Permutation():
     rf = pipeline.named_steps['randomforestclassifier']
     importances = pd.Series(rf.feature_importances_, X_train.columns)
 
-    # Plot feature importances
-    import matplotlib.pyplot as plt
+    st.title("Permutation Visualization")
 
- 
+    n = 30
+    plt.figure(figsize=(10,n/2))
+    plt.title(f'Top {n} features')
+    importances.sort_values()[-n:].plot.barh(color='Cyan');
+    
+   
 
    # Display the plot in Streamlit
-    st.pyplot(importances.n())
+
 
      
 
