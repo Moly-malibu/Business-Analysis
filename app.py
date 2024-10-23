@@ -6,10 +6,12 @@ import requests
 from requests import get
 import pandas as pd
 import numpy as np
-<<<<<<< HEAD
+
 import sklearn
 sklearn.set_config(transform_output="pandas")
 import category_encoders as ce
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.metrics import mean_squared_error
 from sklearn.impute import SimpleImputer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -17,25 +19,15 @@ from sklearn.pipeline import make_pipeline
 import matplotlib.pyplot as plt
 import itertools
 
- 
 
-=======
-#import category_encoders as ce
-#from sklearn.impute import SimpleImputer
-#from sklearn.ensemble import RandomForestClassifier
-#from sklearn.model_selection import train_test_split
-#from sklearn.pipeline import make_pipeline
- 
 
->>>>>>> origin/main
-
-st.markdown("<h1 style='text-align: center; color: #002967;'>Business Analysis</h1>", unsafe_allow_html=True)
-st.markdown("<h1 style='text-align: center; color: #002967;'>Agriculture Crop Production by Countries: Vegetales & Fruits</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #002967;'>Business Analysis with AI</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #002967;'>Agriculture by Countries</h1>", unsafe_allow_html=True)
 def main():
     # Register pages
     pages = {
         "Home": Home,
-        "datainfo": datainfo,
+        "statistics": statistics,
         "Permutation": Permutation,
     }
     st.sidebar.title("Statistics")
@@ -53,13 +45,61 @@ def Home():
         </style>
         '''
         st.markdown(page_bg_img, unsafe_allow_html=True)
-        st.write(
+        st.markdown(
         """
-        Artificial Intelligence helps you to perform a successful future, taking the correct decisions by little effort! 
-        ---
 
+        Analyze the potential applications of artificial intelligence (AI) in the agroindustry. Specifically, explore how AI can optimize production processes, improve product quality, enhance sustainability, and support data-driven decision-making. Consider the challenges and potential benefits of AI implementation in this sector.
+
+        
         The aim is to analyze the performance of the Agro-Business industry from 1961 to 2014. Historical data reveals that while the banana industry once faced significant challenges, it has defied initial predictions. Despite forecasts suggesting a bleak future, scientific advancements have played a crucial role in ensuring bananas remain a staple in the global food basket. Although the banana industry has experienced slower growth compared to other sectors within Agribusiness, its resilience over the past six decades is a testament to the power of innovation and adaptation.
-                        ---
+        Considerations for Businesses:
+
+        
+        ***Crop Diversification***:  Market Analysis: Identify crops with growing demand or untapped potential.
+
+        ***Risk Mitigation***: Diversify to reduce vulnerability to pests, diseases, or market fluctuations.
+
+        ***Environmental Impact***: Consider crops that promote sustainable practices (e.g., cover crops, organic farming).
+        
+        ***Technological Advancements***:  Precision Agriculture: Implement technologies like GPS, drones, and sensors for efficient resource management.
+        
+        ***Biotechnology:*** Explore genetically modified organisms (GMOs) for increased yields and resistance to pests.
+        
+        ***Automation***: Invest in automated machinery to reduce labor costs and improve efficiency.
+        
+        ***Climate Change Impacts***: Adaptation Strategies: Develop drought-resistant varieties, implement water-saving irrigation techniques, and consider climate-smart agriculture practices.
+        
+        ***Mitigation Efforts***: Contribute to carbon sequestration by adopting practices like agroforestry or cover cropping.
+        
+        ***Consumer Preferences***: Organic and Sustainable Products: Meet growing demand for environmentally friendly and ethically produced food.
+        
+        ***Local Sourcing***: Support local economies and reduce transportation costs by sourcing ingredients regionally.
+        
+        ***Health and Nutrition***: Offer products that align with consumer health trends (e.g., gluten-free, non-GMO, high-protein).
+        
+        ***Supply Chain Management***:  Traceability: Ensure transparency in the supply chain to build trust with consumers.
+        
+        ***Fair Trade Practices***: Support ethical labor practices and fair compensation for farmers.
+        
+        ***Sustainabilit***y: Minimize environmental impact throughout the value chain (e.g., reduce food waste).
+        
+        ***Regulatory Compliance***:  Food Safety Standards: Adhere to local, national, and international food safety regulations.
+        
+        ***Environmental Regulations***: Comply with environmental protection laws and regulations.
+        
+        ***Labor Standards***: Ensure compliance with labor laws and ethical standards.  Business Opportunities for Social Good
+        
+        ***Food Security Initiatives***: Partner with local communities to improve access to nutritious food.
+        
+        ***Sustainable Farming Practices***: Promote regenerative agriculture to enhance soil health and biodiversity.
+        
+        ***Community Supported Agriculture (CSA)***: Connect directly with consumers through subscription-based farming models.
+        
+        ***Value-Added Products***: Create processed food items that increase product value and shelf life.
+        
+        ***Education and Training***: Provide training and resources to farmers and agricultural workers.
+
+        By carefully considering these factors, businesses can not only capitalize on agricultural trends but also make a positive impact on society through food security, environmental sustainability, and ethical practices.                
         """)
         today = st.date_input('Today is', datetime.datetime.now())
 
@@ -124,7 +164,7 @@ title_temp = """
 	"""
 components.html(title_temp,height=100)
     
-def datainfo():
+def statistics():
     page_bg_img = '''
     <style>
     .stApp {
@@ -138,8 +178,8 @@ def datainfo():
     
     df = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1)
     df.replace(np.nan, 0, inplace=True)
-    info = st.sidebar.selectbox('Data Set Info', (df))
-    st.markdown("<h1 style='text-align: center; color: #002967;'>By Countries</h1>", unsafe_allow_html=True)
+    info = st.sidebar.selectbox('Data Set Info', (df)) 
+    st.markdown("<h1 style='text-align: center; color: #002967;'>Statistics</h1>", unsafe_allow_html=True)
     info = st.sidebar.selectbox('Done', (df))
     shape=(df.shape)
     
@@ -218,39 +258,44 @@ def Permutation():
     y_test = test[target]
 
     pipeline = make_pipeline(
-        ce.OrdinalEncoder(), 
-        SimpleImputer(strategy='median'), 
-        RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+    ce.OrdinalEncoder(), 
+    SimpleImputer(strategy='median'), 
+    RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
     )
 
     # Fit on train, score on val
     pipeline.fit(X_train, y_train)
     st.write('Validation Accuracy', pipeline.score(X_val, y_val))
 
-<<<<<<< HEAD
     # Get feature importances
     rf = pipeline.named_steps['randomforestclassifier']
     importances = pd.Series(rf.feature_importances_, X_train.columns)
 
-    st.title("Permutation Visualization")
-    n = 10
-    plt.figure(figsize=(10,n/2))
+    # Plot feature importances
+    import matplotlib.pyplot as plt
+
+    
+
+    n = 30
+    plt.figure(figsize=(10, n / 2))  # Adjust figure size based on number of features
     plt.title(f'Top {n} features')
-    vis = importances.sort_values()[-n:].plot.barh(color='Cyan');
-    
-    
+    sorted_importances = importances.sort_values(ascending=False)[:n]  # Sort descending and select top n
+    fig, ax = plt.subplots()
+    ax.hist(sorted_importances, bins=20)
+    sorted_importances.plot.barh(color='Cyan');
+    st.pyplot(fig) 
 
 
 
+    #encoder=ce.LeaveOneOutEncoder(return_df=True)
+    #X_train_loo = encoder.fit_transform(X_train, y_train)
+    #X_test_loo = encoder.transform(X_test)
 
-   
-
-   # Display the plot in Streamlit
-
-
-     
-=======
->>>>>>> origin/main
+    #fit the model
+    #model = GradientBoostingRegressor(learning_rate=0.05, max_depth=5, n_estimator=500, n_iter_no_change=10)
+    #model.fit(X_train_loo, y_train)
+    #rmse = np.sqrt(mean_squared_error(y_test, model.predict(X_test_loo)))
+    #st.write(rmse)
 
 
 if __name__ == "__main__":
