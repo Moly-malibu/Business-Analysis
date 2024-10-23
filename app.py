@@ -281,7 +281,7 @@ def Permutation():
     plt.title(f'Top {n} features')
     sorted_importances = importances.sort_values(ascending=False)[:n]  # Sort descending and select top n
     fig, ax = plt.subplots()
-    ax.hist(sorted_importances, bins=20)
+    #ax.hist(sorted_importances, bins=20)
     sorted_importances.plot.barh(color='Cyan');
     st.pyplot(fig) 
 
