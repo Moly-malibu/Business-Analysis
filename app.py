@@ -380,11 +380,24 @@ def AgroBusiness():
     rf = pipeline.named_steps['randomforestclassifier']
     importances = pd.Series(rf.feature_importances_, X_train.columns)
 
+    #Permutation Importance: transformers
+    transformers = make_pipeline(
+        ce.OrdinalEncoder(), 
+        SimpleImputer(strategy='median')
+    )
+
+    X_train_transformed = transformers.fit_transform(X_train)
+    X_val_transformed = transformers.transform(X_val)
+
+    model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+    model.fit(X_train_transformed, y_train)
+
     # Plot feature importances
     n =  53
     plt.figure(figsize=(5, n / 2))  # Adjust figure size based on number of features
     plt.title(f'Top {n} features')
     sorted_importances = importances.sort_values(ascending=False)[:n]  # Sort descending and select top n
+    
     fig, ax = plt.subplots()
     sorted_importances.plot.barh(color='Cyan');
     st.title("Permutation Plotter")
@@ -401,6 +414,7 @@ def AgroBusiness():
 
     gb.fit(X_train, y_train)
     y_pred = gb.predict(X_val)
+    st.subheader("""R-squared""")
     st.markdown(
     """
     R-squared (R²) is a statistical measure that represents the proportion of the variance in the dependent variable that is explained by the independent variables in a regression model. In simpler terms, it tells us how well our model fits the data. 
@@ -411,64 +425,56 @@ def AgroBusiness():
      """)
     st.write('Gradient Boosting R^2', r2_score(y_val, y_pred))
 
+    residual = plt.figure(figsize=(20, 20))
+    plt.scatter(y_pred, y_train - y_pred)
+    plt.xlabel("Predicted Values")
+    plt.ylabel("Residuals")
+    plt.title("Residual Plot")
+    st.pyplot(residual)
 
-    # from xgboost import XGBClassifier
-    # from sklearn.callbacks import EarlyStopping
+    # Prediction vs. Actual Values Plot
+    predic = plt.figure(figsize=(20, 20))
+    plt.scatter(y_train, y_pred)
+    plt.xlabel("Actual Values")
+    plt.ylabel("Predicted Values")
+    plt.title("Prediction vs. Actual Values")
+    plt.plot([min(y_train), max(y_train)], [min(y_train), max(y_train)], color='red')  # 45-degree line
+    st.pyplot(predic)
 
-    # pipeline = make_pipeline(
-    #     ce.OrdinalEncoder(), 
-    #     XGBClassifier(n_estimators=100, random_state=42, n_jobs=-1)
-    # )
+    st.write(
+    """ 
+    conclusions:
 
-    # pipeline.fit(X_train, y_train)
+    1. Inventory Reduction:
 
-    # # fit_transfom on train, transform on val
-    # encoder = ce.OrdinalEncoder()
-    # X_train_encoded = encoder.fit_transform(X_train)
-    # X_val_encoded = encoder.transform(X_val)
+    The industry may be strategically reducing inventory levels to optimize costs or prepare for a shift in demand. This could be due to a change in consumer preferences, a change in production methods, or other factors. However, it's crucial to consider the potential impact on global food security, especially in the context of fruit and vegetable production. If these essential food sources are not being properly valued and exploited, it could lead to significant challenges in meeting future food demands.
 
-    # model = XGBClassifier(
-    #     n_estimators=1000,  # <= 1000 trees, depends on early stopping
-    #     max_depth=7,        # try deeper trees because of high cardinality categoricals
-    #     learning_rate=0.5,  # try higher learning rate
-    #     n_jobs=-1
-    # )
+    2. Increased Efficiency:
 
-    # eval_set = [(X_train_encoded, y_train), 
-    #             (X_val_encoded, y_val)]
+    This industry may have improved its productive efficiency, allowing it to produce the same amount of goods with fewer resources. However, the decline in agricultural cultivation, particularly for fruits and vegetables, raises concerns about potential food security issues. This trend could lead to the extinction of certain crops and limit the availability of healthy food options. To address these challenges, there's a growing interest in revitalizing agriculture, particularly in areas like fruit and vegetable production. By doing so, we can potentially reduce production costs, increase profit margins, and positively impact both the economy and public health.
+    
+    3. Supply Chain Optimization:
 
-    # early_stopping = EarlyStopping(monitor='val_loss', patience=50, mode='min')  # Adjust parameters
+    This industry could benefit from optimizing its supply chain to reduce delivery times and inventory levels. This would lead to faster deliveries and lower costs. However, it's important to note that agriculture, particularly fruit and vegetable production, is a vital sector that has been declining for decades. This trend poses a significant threat to global food security. Therefore, investing in and revitalizing this industry is crucial to ensure a sustainable food supply for future generations.
 
-    # # Fit the model with verbose and early stopping callback
-    # model.fit(X_train_encoded, y_train, verbose=1, eval_set=eval_set, callbacks=[early_stopping])
+    4. Outsourcing or Offshoring:
+ 
+    This industry might be outsourcing or offshoring some of its production to reduce costs or increase capacity. While this can lead to a decrease in domestic production, it can also increase overall production. Such strategic moves can be beneficial for both the company and the countries involved, as they can lead to economic growth, job creation, and increased efficiency. However, it's important to consider the potential social and environmental impacts of these decisions.
 
-    # residual = plt.figure(figsize=(20, 20))
-    # plt.scatter(y_pred, y_train - y_pred)
-    # plt.xlabel("Predicted Values")
-    # plt.ylabel("Residuals")
-    # plt.title("Residual Plot")
-    # st.pyplot(residual)
+    5. Market Strategy:
 
-    # # Feature Importance Plot
-    # feature_importance = model.feature_importances_
-    # feature_names = X.columns
-    # feature = plt.figure(figsize=(20, 20))
-    # plt.barh(feature_names, feature_importance)
-    # plt.xlabel("Importance")
-    # st.pyplot(feature)
+    This industry might focus on high-margin products to boost sales and profitability. However, it's essential to maintain production of lower-margin products, especially those that are vital for food security and human health. A balanced approach that prioritizes both profitability and societal needs is crucial.
 
-    # plt.ylabel("Feature")
-    # plt.title("Feature Importance")
-    # st.pyplot(feature)
 
-    # # Prediction vs. Actual Values Plot
-    # predic = plt.figure(figsize=(20, 20))
-    # plt.scatter(y_train, y_pred)
-    # plt.xlabel("Actual Values")
-    # plt.ylabel("Predicted Values")
-    # plt.title("Prediction vs. Actual Values")
-    # plt.plot([min(y_train), max(y_train)], [min(y_train), max(y_train)], color='red')  # 45-degree line
-    # st.pyplot(predic)
+    To draw a definitive conclusion, it's essential to consider additional factors:
+
+    Market conditions: Analyze the overall market trends, including economic factors, consumer behavior, and competitive landscape.
+    Company-specific factors: Consider the company's business strategy, financial performance, and any recent announcements or news.
+    Data quality and completeness: Ensure that the data used for analysis is accurate and reliable.
+    Time frame: Analyze the trends over a specific period to identify any short-term fluctuations or long-term patterns.
+    
+
+    """)
     
 
 
