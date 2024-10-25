@@ -264,9 +264,12 @@ Detailed Breakdown:
                 
 ***Min and Max***: The minimum value is 183, and the maximum is 23,108,809.118. This shows the range of values in the dataset.
 
-Percentiles:
+***Percentiles***:
+                
 25% (Q1): 25% of the observations fall below 936,321.5.
+                
 50% (Median): 50% of the observations fall below 4,025,630.5. This is also the middle value when the data is sorted.
+                
 75% (Q3): 75% of the observations fall below 10,450,083.75.
 
 ***Interpretation of Skewness***:
@@ -385,8 +388,8 @@ The main agricultural producer has been China and the smallest has been British 
     importances = pd.Series(rf.feature_importances_, X_train.columns)
 
     # Plot feature importances
-    n = 50
-    plt.figure(figsize=(10, n / 2))  # Adjust figure size based on number of features
+    n =  100
+    plt.figure(figsize=(20, n / 2))  # Adjust figure size based on number of features
     plt.title(f'Top {n} features')
     sorted_importances = importances.sort_values(ascending=False)[:n]  # Sort descending and select top n
     fig, ax = plt.subplots()
@@ -396,4 +399,3 @@ The main agricultural producer has been China and the smallest has been British 
 
 
 if __name__ == "__main__":
-   main()
