@@ -24,11 +24,12 @@ import plotly.graph_objects as go
 
 
 st.markdown("<h1 style='text-align: center; color: #002967;'>Business Analysis with AI</h1>", unsafe_allow_html=True)
-st.markdown("<h1 style='text-align: center; color: #002967;'>Agriculture by Countries</h1>", unsafe_allow_html=True)
+# st.markdown("<h1 style='text-align: center; color: #002967;'>Agriculture by Countries</h1>", unsafe_allow_html=True)
 def main():
     # Register pages
     pages = {
         "Home": Home,
+        "Sales": Sales,
         "AgroBusiness": AgroBusiness,
     }
     st.sidebar.title("Statistics")
@@ -476,6 +477,17 @@ def AgroBusiness():
 
     """)
     
+def Sales():
+    page_bg_img = '''
+    <style>
+    .stApp {
+    background-image: url("https://img.freepik.com/free-vector/geometric-shapes-background-paper-style_23-2148292297.jpg?t=st=1729897204~exp=1729900804~hmac=8f0e9f3a92bd3cd34f7302101bbf78b063b2db65d1a1634eb2283c530aaf00e2&w=2000");
+    background-size: cover;
+    }
+    </style>
+    '''
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #002966;'>Customer demographics and sales in United States</h1>", unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
