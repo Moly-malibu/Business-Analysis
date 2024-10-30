@@ -478,6 +478,7 @@ def AgroBusiness():
     """)
     
 def Sales():
+    import seaborn as sns
     page_bg_img = '''
     <style>
     .stApp {
@@ -488,6 +489,69 @@ def Sales():
     '''
     st.markdown(page_bg_img, unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center; color: #002966;'>Customer demographics and sales in United States</h1>", unsafe_allow_html=True)
+
+    raw_df = pd.read_csv('https://raw.githubusercontent.com/IBM/analyze-customer-data-spark-pixiedust/master/data/customers_orders1_opt.csv')
+    st.write(raw_df)
+
+    #cleaning data unnecesary columns.
+
+    df = raw_df.drop(columns=['ADDRESS1', 'CITY', 'COUNTRY_CODE', 'POSTAL_CODE', 'POSTAL_CODE_PLUS4', 
+                        'ADDRESS2', 'EMAIL_ADDRESS', 'PHONE_NUMBER', 'LOCALITY', 'DRIVER_LICENSE', 
+                        'NATIONAL_ID', 'ORDER_DATE', 'ORDER_TIME', 'NATIONALITY', 'SALESMAN_ID',
+                        'CUST_ID', 'ORDER_ID', 'FREIGHT_CHARGES', 'ORDER_SALESMAN', 'ORDER_POSTED_DATE', 'ORDER_SHIP_DATE', 'AGE',
+                        'ORDER_VALUE', 'T_TYPE', 'PURCHASE_STATUS', 'CUSTNAME', 'CREDITCARD_NUMBER'])
+    df = pd.DataFrame(df)
+    st.write(df)
+    st.write("Columns and Rows", df.shape)
+    st.write(df.count())
+    st.write(df.describe())
+    
+
+    data = df[['Baby Food', 'Diapers', 'Formula', 'Lotion',
+       'Baby wash', 'Wipes', 'Fresh Fruits', 'Fresh Vegetables', 'Beer',
+       'Wine', 'Club Soda', 'Sports Drink', 'Chips', 'Popcorn', 'Oatmeal',
+       'Medicines', 'Canned Foods', 'Cigarettes', 'Cheese',
+       'Cleaning Products', 'Condiments', 'Frozen Foods', 'Kitchen Items',
+       'Meat', 'Office Supplies', 'Personal Care', 'Pet Supplies', 'Sea Food',
+       'Spices']]
+    correlation_matrix = data.corr(method='pearson')
+    st.write("Correlation Matrix:")
+    st.write(correlation_matrix)
+    
+    # Create a heatmap for the correlation matrix
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='coolwarm', square=True, cbar_kws={"shrink": .8})
+    plt.title('Correlation Heatmap')
+    plt.xticks(rotation=45)
+    plt.yticks(rotation=45)
+
+    # Show the heatmap in Streamlit
+    st.pyplot(plt)
+    
+    # Calculate the covariance matrix
+    covariance_matrix = data.cov()
+
+    # Display the covariance matrix in Streamlit
+    st.write("Covariance Matrix:")
+    st.write(covariance_matrix)
+
+    # Create a heatmap for the covariance matrix
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(covariance_matrix, annot=True, fmt=".2f", cmap='coolwarm', square=True, cbar_kws={"shrink": .8})
+    plt.title('Covariance Heatmap')
+    plt.xticks(rotation=45)
+    plt.yticks(rotation=45)
+
+    # Show the heatmap in Streamlit
+    st.pyplot(plt)
+    
+    
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
