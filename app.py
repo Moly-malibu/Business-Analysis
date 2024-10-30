@@ -288,12 +288,6 @@ def AgroBusiness():
     sns.histplot(data=grouped['Area'], bins=10, ax=ax2)
     st.pyplot(fig2)
 
-    # Correlation matrix
-    # correlation_matrix = df.corr()
-    # fig3 = sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
-    # st.subheader("Correlation Matrix")
-    # st.pyplot(fig3)
-
     st.subheader("""Model""")
     items= df['Item'].describe()
     st.write("Statistic Describe: Targe Products:", items)
@@ -514,6 +508,7 @@ def Sales():
        'Cleaning Products', 'Condiments', 'Frozen Foods', 'Kitchen Items',
        'Meat', 'Office Supplies', 'Personal Care', 'Pet Supplies', 'Sea Food',
        'Spices']]
+    
     correlation_matrix = data.corr(method='pearson')
     st.write("Correlation Matrix:")
     st.write(correlation_matrix)
@@ -544,15 +539,657 @@ def Sales():
 
     # Show the heatmap in Streamlit
     st.pyplot(plt)
+
+
+    st.write('The value of Skewness is:')
+    st.write(data.skew())
+
+    st.write('The value of kurtosis is:')
+    st.write(data.kurtosis())
+
+    # Set the style for seaborn
+    sns.set_theme(style='whitegrid')
+
+    # Create a figure for the plots
+    plt.figure(figsize=(16, 10))
+
+    # Create histogram and KDE plot
+    sns.histplot(data['Lotion'], bins=10, kde=True, color='blue', alpha=0.5)
+
+    # Add titles and labels
+    plt.title('Distribution of Lotion Values, relationship Lotion with the others products')
+    plt.xlabel('Lotion Values')
+    plt.ylabel('Frequency')
+
+    # Show the plot in Streamlit
+    st.pyplot(plt)
+
+    # Display the DataFrame and Skewness value
+    st.write('The value of Skewness is:', data['Lotion'].skew())
+
+    st.markdown(
+    """ 
+    ***Feature Engineering***:
+    The database object of this study presents the features of segmenting the market into two categories, one is by-products and the other by qualities or characterization of the customers, so it will be coded in such a way as to show us the grouped information unifying it to In order to respond to which market segmentation the product should be directed and in which product more emphasis should be placed.
+
+    ***Categorical Variable***:
+
+    -GENDER CODE : Master, Miss, Mr. Mrs.
+    
+    -STATE: All state of United States.
+    
+    -CREDITCARD_TYPE: American Express, Diners Club, Discover, JCB, Master Card    VISA
+    
+    -PURCHASE_TOUCHPOINT: Desktop, Phone
+    
+    -ORDER_TYPE: High Value, Medium Value, Low Value
+    
+    -GENERATION: Baby Boomer that represent 76 million people born between 1946 and 1964. Generation X born between 1965 and 1980. Generation Z born after 1997.
+
+    ***Analysis***:
+
+    In this dataset the generation Baby Boomer that represent 76 million people born between 1946 and 1964. They expenden more money that generation X, Y and Z, being generation X the ones who spend the least. See Table:
+    """)
+
+    df = pd.DataFrame(raw_df)
+
+    # Create a cross-tabulation of Gender and Generation
+    result = pd.crosstab(df['GenderCode'], df['GENERATION'])
+    st.write(result)
+    st.write(result.describe())
+
+    crosstab_reset = result.reset_index()
+
+    # Melt the crosstab for seaborn compatibility
+    melted_crosstab = crosstab_reset.melt(id_vars='GenderCode', var_name='GENERATION', value_name='Count')
+
+    import plotly.express as px
+
+    # Assuming you have your melted_crosstab DataFrame ready
+
+    # Create the box plot
+    fig = px.box(melted_crosstab, x="GENERATION", y="Count", color="GenderCode",
+                title="Distribution of Count by Generation and Gender")
+
+    # Display the plot in Streamlit
+    st.plotly_chart(fig)
+    st.markdown(""" 
     
     
+""")
+
+    df = pd.DataFrame(raw_df)
+
+    # Create a cross-tabulation of Gender and credit card type
+    result = pd.crosstab(df['GENERATION'], df['CREDITCARD_TYPE'])
+    st.write(result)
+    st.write(result.describe())
+
+    crosstab_reset = result.reset_index()
+
+    # Melt the crosstab for seaborn compatibility
+    melted_crosstab = crosstab_reset.melt(id_vars='GENERATION', var_name='CREDITCARD_TYPE', value_name='Count')
+
+    import plotly.express as px
+
+    # Assuming you have your melted_crosstab DataFrame ready
+
+    # Create the box plot
+    fig = px.box(melted_crosstab, x="GENERATION", y="Count", color="CREDITCARD_TYPE",
+                title="Distribution of Count by Generation and CREDIT CARD TYPE")
+
+    # Display the plot in Streamlit
+    st.write(result.describe())
+    st.plotly_chart(fig)
+    st.markdown(""" 
+    
+    """)
+    ccg = pd.crosstab(df['CREDITCARD_TYPE'], df['GenderCode'])
+    st.write(ccg)
+    st.write(ccg.describe())
+
+    crosstab_reset = ccg.reset_index()
+
+    # Melt the crosstab for seaborn compatibility
+    melted_crosstab = crosstab_reset.melt(id_vars='CREDITCARD_TYPE', var_name='GenderCode', value_name='Count')
+
+    import plotly.express as px
+
+    # Assuming you have your melted_crosstab DataFrame ready
+
+    # Create the box plot
+    fig = px.box(melted_crosstab, x="CREDITCARD_TYPE", y="Count", color="GenderCode",
+                title="Distribution of Count by CREDIT CARD TYPE and Gender")
+
+    # Display the plot in Streamlit
+    st.write(ccg.describe())
+    st.plotly_chart(fig)
+    st.markdown(""" 
+
+    """)
+
+    vg = pd.crosstab(df['GenderCode'], df['ORDER_TYPE'])
+    st.write(vg)
+    st.write(vg.describe())
+
+    crosstab_reset = vg.reset_index()
+
+    # Melt the crosstab for seaborn compatibility
+    melted_crosstab = crosstab_reset.melt(id_vars='GenderCode', var_name='ORDER_TYPE', value_name='Count')
+
+    import plotly.express as px
+
+    # Assuming you have your melted_crosstab DataFrame ready
+
+    # Create the box plot
+    fig = px.box(melted_crosstab, x="GenderCode", y="Count", color="ORDER_TYPE",
+                title="Distribution of Count by Gender TYPE and Order type")
+
+    # Display the plot in Streamlit
+    st.write(ccg.describe())
+    st.plotly_chart(fig)
+    st.markdown(""" 
+
+    """)
+    # Set the Seaborn style
+    sns.set_theme(style="ticks", color_codes=True)
+
+    # Assuming 'tab4' is your DataFrame
+    pair = sns.pairplot(melted_crosstab)
+
+    # Display the plot in Streamlit
+    st.pyplot(pair)
+
+    st.markdown(
+    """
+    ***Statistic categorical compared the use of different Purchase touch point by gender***.
+    Shopping continues with the trend towards online or telephone purchases, being men and women parents the ones who currently use this system the most.
+
+    """)
+
+    os = pd.crosstab(df['Office Supplies'], df['ORDER_TYPE'])
+    st.write(os)
+    st.write(os.describe())
+
+    crosstab_reset = os.reset_index()
+
+    # Melt the crosstab for seaborn compatibility
+    melted_crosstab = crosstab_reset.melt(id_vars='Office Supplies', var_name='ORDER_TYPE', value_name='Count')
+
+    # Create the box plot
+    fig_pg = px.box(melted_crosstab, x="Office Supplies", y="Count", color="ORDER_TYPE",
+                title="Distribution of Count by Office Supplies and ORDER TYPES")
+
+    # Display the plot in Streamlit
+    # st.write(fig_pg.describe())
+    st.plotly_chart(fig_pg)
+    gr= melted_crosstab.groupby(by="ORDER_TYPE").sum()
+    st.write(gr)
+    st.markdown(""" 
+
+    """)
 
 
 
+    pg = pd.crosstab(df['GenderCode'], df['PURCHASE_TOUCHPOINT'])
+    st.write(pg)
+
+    crosstab_reset = pg.reset_index()
+
+    # Melt the crosstab for seaborn compatibility
+    melted_crosstab = crosstab_reset.melt(id_vars='GenderCode', var_name='PURCHASE_TOUCHPOINT', value_name='Count')
+
+    # Create the box plot
+    fig_pg = px.box(melted_crosstab, x="GenderCode", y="Count", color="PURCHASE_TOUCHPOINT",
+                title="Distribution of Count by Gender and Purchase touch Point")
+
+    # Display the plot in Streamlit
+    # st.write(fig_pg.describe())
+    st.plotly_chart(fig_pg)
+    st.markdown(""" 
+
+    """)
+
+    
+    # Assuming 'tab6' is your DataFrame
+    sns.catplot(x='Desktop', y='Phone', kind='bar', data=pg, height=7)
+
+    # Display the plot in Streamlit
+    st.pyplot(plt.gcf())
+    st.markdown(
+    """ 
 
 
+    """)
+    pp = pd.crosstab(df['Pet Supplies'], df['PURCHASE_TOUCHPOINT'])
+    st.write(pp)
+    st.write(pp.describe())
+
+    crosstab_reset = pp.reset_index()
+
+    # Melt the crosstab for seaborn compatibility
+    melted_crosstab = crosstab_reset.melt(id_vars='Pet Supplies', var_name='PURCHASE_TOUCHPOINT', value_name='Count')
+
+    # Create the box plot
+    fig_pg = px.box(melted_crosstab, x="Pet Supplies", y="Count", color="PURCHASE_TOUCHPOINT",
+                title="Distribution of Count by Pet Supplies and PURCHASE TOUCHPOINT")
+
+    # Display the plot in Streamlit
+    # st.write(fig_pg.describe())
+    st.plotly_chart(fig_pg)
+    gr= melted_crosstab.groupby(by="PURCHASE_TOUCHPOINT").sum()
+    st.write(gr)
+    st.markdown(""" 
+
+    """)
 
 
+    sg = pd.crosstab(df['GENERATION'], df['STATE'])
+    st.write(sg)
+    st.write(sg.describe())
+
+    crosstab_reset = sg.reset_index()
+
+    # Melt the crosstab for seaborn compatibility
+    melted_crosstab = crosstab_reset.melt(id_vars='GENERATION', var_name='STATE', value_name='Count')
+
+    # Create the box plot
+    fig_pg = px.box(melted_crosstab, x="GENERATION", y="Count", color="STATE",
+                title="Distribution of Count by Generation and States")
+
+    # Display the plot in Streamlit
+    # st.write(fig_pg.describe())
+    st.plotly_chart(fig_pg)
+    st.markdown(""" 
+
+    """)
+
+    st.markdown(
+    """ 
+    ***Categorical Analysis by Products***: The analysis of the products we can see how the first 3 products that are bought the most are Lotions, wipes and cleaning products. See Table.
+    
+
+    """)
+    bs = pd.crosstab(df['Baby wash'], df['STATE'])
+    st.write(bs)
+    st.write(bs.describe())
+
+    crosstab_reset = bs.reset_index()
+
+    # Melt the crosstab for seaborn compatibility
+    melted_crosstab = crosstab_reset.melt(id_vars='Baby wash', var_name='STATE', value_name='Count')
+
+    # Create the box plot
+    fig_pg = px.box(melted_crosstab, x="Baby wash", y="Count", color="STATE",
+                title="Distribution of Count by Baby wash and States")
+
+    # Display the plot in Streamlit
+    # st.write(fig_pg.describe())
+    st.plotly_chart(fig_pg)
+    gr= melted_crosstab.groupby(by="STATE").sum()
+    st.write(gr)
+    st.markdown(""" 
+
+    """)
+
+   
+
+    st.markdown(""" 
+
+    """)
+
+    
+    # Create a figure
+    st.subheader("Summary")
+    grouped = df.groupby(['ORDER_TYPE', 'PURCHASE_TOUCHPOINT', 'CREDITCARD_TYPE', 'STATE']).agg({'GenderCode': 'sum'}).reset_index()
+
+    # Add a dropdown to select the x-axis column
+    x_axis_column = st.selectbox('GenderCode', grouped.columns)
+
+    # Add a dropdown to select the y-axis column
+    y_axis_column = st.selectbox('Generation', grouped.columns)
+
+    # Create the Plotly figure
+    fig = px.scatter(grouped, x=x_axis_column, y=y_axis_column, title='Interactive Scatter Plot')
+
+    # Customize the figure (optional)
+    fig.update_layout(
+        xaxis_title=x_axis_column,
+        yaxis_title=y_axis_column
+    )
+    # Display the figure in Streamlit
+    st.plotly_chart(fig)
+
+    import plotly.express as px
+
+    # Example: Time Series Analysis of Total Sales
+    fig = px.line(df, x='ORDER_DATE', y='ORDER_VALUE', title='Total Sales Over Time')
+    st.plotly_chart(fig)
+
+    # Example: Bar Chart of Top 10 Products by Sales
+    top_10_products = df.groupby('GenderCode')['ORDER_VALUE'].sum().sort_values(ascending=False).head(10)
+    fig = px.bar(top_10_products, x=top_10_products.index, y='ORDER_VALUE', title='Top 10 Products by Sales')
+    st.plotly_chart(fig)
+
+
+    import folium
+    from folium.plugins import MarkerCluster
+    from geopy.geocoders import Nominatim
+    # Initialize geocoder
+    geolocator = Nominatim(user_agent="geoapiExercises")
+
+    # Function to get latitude and longitude from postal code
+    def get_lat_long(postal_code):
+        location = geolocator.geocode(postal_code)
+        if location:
+            return location.latitude, location.longitude
+        else:
+            return None, None
+
+    # Add latitude and longitude columns to the DataFrame
+    df['LATITUDE'], df['LONGITUDE'] = zip(*df['POSTAL_CODE_PLUS4'].apply(get_lat_long))
+
+    # Set the title for the Streamlit app
+    st.title("Customer Location and Product Sales Analysis")
+
+    # Create a Folium map
+    m = folium.Map(location=[df['LATITUDE'].mean(), df['LONGITUDE'].mean()], zoom_start=4)
+    marker_cluster = MarkerCluster().add_to(m)
+
+    # Add markers for each customer location
+    for idx, row in df.iterrows():
+        if pd.notnull(row['LATITUDE']) and pd.notnull(row['LONGITUDE']):
+            folium.Marker(
+                location=[row['LATITUDE'], row['LONGITUDE']],
+                popup=f"{row['POSTAL_CODE_PLUS4']}, {row['CITY']}",
+                icon=folium.Icon(color='blue')
+            ).add_to(marker_cluster)
+
+    # Display the map in Streamlit
+    st.subheader("Customer Locations")
+    st.markdown("### Click on the markers to see customer addresses.")
+    st_folium = st.components.v1.html(m._repr_html_(), height=500)
+
+    # Create a bar chart for product sales
+    product_sales = df[['Lotion', 'Beer']].sum().reset_index()
+    product_sales.columns = ['Product', 'Sales']
+
+    fig = px.bar(product_sales, x='Product', y='Sales',
+                title='Total Sales by Product',
+                labels={'Sales': 'Total Sales'},
+                color='Product')
+
+    # Show the bar chart in Streamlit
+    st.subheader("Product Sales Overview")
+    st.plotly_chart(fig)
+
+    st.markdown(
+    """ 
+    ***Model***
+
+    Regression Analysis:
+
+    Regression analysis is a type of supervised machine learning that helps to identify and quantify the relationship between one or more features (independent variables) and a target variable (dependent variable). This analysis is essential for predicting outcomes based on input data.
+    
+    ***Logistic Regression*** is a specific type of regression analysis used when the target variable is categorical, particularly for binary outcomes (e.g., yes/no, true/false). In logistic regression, the probability of an event occurring is modeled as a linear combination of predictor variables. Importantly, there is no requirement for a linear relationship between the dependent and independent variables in this case. Instead, logistic regression can handle binary values (0 or 1, representing false or true).  To map predicted probabilities to binary outcomes, we use the sigmoid function, which transforms any real-valued number into a value between 0 and 1. This allows us to interpret the output as a probability.
+    
+    
+    ***Preparing Categorical Data***
+
+    Before building a model, it’s crucial to prepare the data properly:
+            Normalization: This process involves organizing data into tables and establishing relationships between those tables according to specific rules. Normalization aims to protect data integrity and enhance database flexibility by eliminating redundancy and ensuring consistent dependencies.
+    
+    Dataset Splitting
+            When creating a predictive model, we typically divide our dataset into two main parts:
+            Training Dataset: This subset of data is used to train the model. It includes samples that help the model learn the underlying patterns in the data.
+            Validation Dataset: This subset is used to evaluate the model's performance after training. It helps assess how well the model generalizes to unseen data.
+            
+    -***Features and Target Variable***
+   
+    In regression analysis, we distinguish between:
+    
+    ***Features (Independent Variables)***: These are the input variables used to predict the target variable.
+    
+    ***Target Variable (Dependent Variable)***: This is the outcome we are trying to predict.
+    
+    
+    ***Steps to Create a Logistic Regression Model***: Here are the steps typically involved in creating a logistic regression model:
+    
+    ***Data Preparation***: Clean the dataset by handling missing values and outliers. Encode categorical variables using techniques like one-hot encoding or label encoding.
+        
+    ***Feature Selection***: Identify relevant features that contribute significantly to predicting the target variable.
+        
+    ***Split the Dataset***: Divide the dataset into training and validation sets (commonly using an 80/20 split).
+        
+    ***Model Training***: Use logistic regression algorithms from libraries such as scikit-learn in Python to fit the model on the training dataset.
+        
+    ***Model Evaluation***: Evaluate model performance using metrics such as accuracy, precision, recall, F1 score, and ROC-AUC on the validation dataset.
+        
+    ***Hyperparameter Tuning***: Adjust hyperparameters to optimize model performance through techniques like cross-validation.
+        
+    ***Final Model Deployment***: One satisfied with performance metrics, deploy the model for making predictions on new data.
+
+    This structured approach provides clarity on each aspect of regression analysis and logistic regression while outlining essential steps for building a predictive model.
+
+    """)
+
+    df['GenderCode'].value_counts(normalize=True) #Normalize the dataset.
+    df['GenderCode'].describe()
+    product_df = df.copy() #Prepared the dataset to partition.
+    train_set = product_df.sample(frac=0.75, random_state=0)
+    test_set  = product_df.drop(train_set.index)
+
+
+    target = 'Lotion'  #create the target and train set.
+    y_train = train_set[target]
+    y_train.value_counts(normalize=True)
+    
+    from sklearn.linear_model import LogisticRegressionCV
+    from sklearn.model_selection import train_test_split
+
+    linear_reg = LogisticRegressionCV() #create the model.
+    train_set, val = train_test_split(train_set, random_state=42)
+    train_set.shape, val.shape
+
+    #create the features by products.
+    features = ['Baby Food', 'Diapers', 'Formula', 
+        'Baby wash', 'Wipes', 'Fresh Fruits', 'Fresh Vegetables', 'Beer',
+        'Wine', 'Club Soda', 'Sports Drink', 'Chips', 'Popcorn', 'Oatmeal',
+        'Medicines', 'Canned Foods', 'Cigarettes', 'Cheese',
+        'Cleaning Products', 'Condiments', 'Frozen Foods', 'Kitchen Items',
+        'Meat', 'Office Supplies', 'Personal Care', 'Pet Supplies', 'Sea Food',
+        'Spices']
+
+    X_train = train_set[features] #create train set ann validation.
+    y_train = train_set[target]
+    X_val = val[features]
+    y_val = val[target]
+
+    from sklearn.impute import SimpleImputer
+    from sklearn.linear_model import LogisticRegressionCV
+    from sklearn.preprocessing import StandardScaler
+
+    imputer = SimpleImputer () #impute missiing values
+    X_train_imputed = imputer.fit_transform(X_train)
+    X_val_imputed = imputer.transform(X_val)
+
+    scaler = StandardScaler() #Scaler and  fit
+    X_train_scaled = scaler.fit_transform(X_train_imputed)
+    X_val_scaled = scaler.transform(X_val_imputed)
+
+    model = LogisticRegressionCV(cv=5, n_jobs=1, random_state=42) #Fit the Model
+    model.fit(X_train_scaled, y_train)
+    st.write('Validation Accuracy', model.score(X_val_scaled, y_val)) #Model performance indicators that is not overfitting. 
+    st.title("Comparison of Beer and Lotion Preferences")
+
+    # Create the lmplot comparing Beer and Lotion
+    sns.set_theme(style="whitegrid")
+    lm_plot = sns.lmplot(x='Beer', y='Lotion', data=df, scatter_kws={'alpha':0.5})
+
+    # Add titles and labels
+    plt.title('Comparison of Lotion Preference vs Beer Consumption')
+    plt.xlabel('Beer Consumption')
+    plt.ylabel('Lotion Preference')
+
+    # Show the plot in Streamlit
+    st.pyplot(lm_plot)
+    st.markdown(
+    """ 
+    ***EVALUATION***
+    Report validation MAE and R2
+    MAE = (1/n) * Σ|yi – xi|
+
+    """)
+
+    import category_encoders as ce
+    from sklearn.metrics import r2_score
+
+    encoder = ce.OneHotEncoder(use_cat_names=True) #Encoder and fit transform method with train set/val
+    X_train_encoded = encoder.fit_transform(X_train)
+    X_val_encoded = encoder.transform(X_val)
+
+    linear = LogisticRegressionCV() #Logistic Regression 
+    linear.fit(X_train_encoded, y_train)
+
+
+    import numpy as np
+    from sklearn.metrics import mean_squared_error
+    from sklearn.metrics import mean_absolute_error
+
+    y_pred_train = model.predict(X_train_encoded)
+    y_pred_val = model.predict(X_val_encoded)
+
+    st.write(f'Logistic Regression with {len(features)} features: {features}')
+    st.write('______________________________________________')
+    st.write('Train Root Mean Squared Error:', 
+        np.sqrt(mean_squared_error(y_train, y_pred_train)))
+    st.write('Validation Root Mean Square Error:', np.sqrt(mean_squared_error(y_val, y_pred_val)))
+    st.write('Train Mean Absolute Error:', mean_absolute_error(y_train, y_pred_train))
+    st.write('Validation Mean Absolute Error:', mean_absolute_error(y_val, y_pred_val))
+    st.write('Train R^2 Score:', r2_score(y_train, y_pred_train))
+    st.write('Validation R^2 Score:', r2_score(y_val, y_pred_val))
+
+    # Set the title for the Streamlit app
+    # st.title("Product Preference Comparison")
+    # for col in sorted(df.columns):
+    #     if df[col].nunique() <= 20:
+    #         sns.catplot(x=col, y='Lotion', data=df, kind='bar', color='yellow')
+    #         plt.xticks(rotation=45)
+    #         st.pyplot() #Graphic analysis the principal product lotioon compared with the other products and differents variance.
+    @st.cache_data
+    def create_lotion_comparison_plots(df):
+        for col in sorted(df.columns):
+            exclude_columns = ['ADDRESS2', 'LOCALITY', 'DRIVER_LICENSE']
+            # if col != 'Lotion' and df[col].nunique() <= 20:  
+            if col != 'Lotion' and col not in exclude_columns and df[col].nunique() <= 20: # Skip 'Lotion' and check for <= 20 unique values
+                fig, ax = plt.subplots()
+                sns.barplot(x=col, y='Lotion', data=df, ax=ax, color='yellow')
+                plt.xticks(rotation=45)
+                plt.xlabel(col)
+                plt.ylabel('Lotion')
+                plt.title(f'Lotion Comparison with {col}')
+                st.pyplot(fig)
+
+    st.title('Lotion Comparison Analysis')
+    # Assuming you have your DataFrame 'df' loaded
+    if st.cache(allow_output_mutation=True):  # Cache the DataFrame to improve performance
+            df = pd.read_csv('https://raw.githubusercontent.com/IBM/analyze-customer-data-spark-pixiedust/master/data/customers_orders1_opt.csv')  # Replace with your data loading logic
+
+    create_lotion_comparison_plots(df.copy())  # Operate on a copy to avoid modifying original data
+
+    st.markdown(
+    """
+   ***Analysis***
+    In this analysis, we utilize logistic regression to examine various features within the dataset. Our findings reveal that lotions are the primary product on which customers spend their money. When compared to other products such as beer, cigarettes, and medicine, lotions consistently show higher consumer expenditure.
+
+    Among the payment methods analyzed, Diners Club emerges as the credit card with the highest sales volume for lotions, closely followed by American Express. This indicates a strong preference among customers using these cards for purchasing lotions.
+
+    When comparing lotion purchases to cheese, we observe that customers exhibit similar levels of preference for both products. This suggests that lotions and cheese are perceived as equally desirable among consumers at the point of sale.
+
+    Further analysis by generation indicates that Generation Z (individuals born after 1997) is the most significant demographic for lotion sales. This generation demonstrates a higher propensity to spend on these products, making them a key target market for future marketing efforts.
+
+    In terms of gender demographics, both females and males (Miss and Mr.) are represented in the purchasing patterns.
+
+    Finally, when considering the average expenditure, it is evident that customers prefer to buy lotions directly from physical stores (desktop), highlighting a significant channel for sales in this product category. 
+
+
+    ***Calculate Negative Mean Absolute Error***:
+    """)
+    import category_encoders as ce
+    from sklearn.feature_selection import f_regression, SelectKBest
+    from sklearn.linear_model import Ridge
+    from scipy.stats import randint, uniform
+    from sklearn.pipeline import make_pipeline
+    from sklearn.model_selection import cross_val_score
+
+    pipeline = make_pipeline(
+        ce.OneHotEncoder(use_cat_names=True), 
+        SimpleImputer(strategy='mean'), 
+        StandardScaler(), 
+        SelectKBest(f_regression, k=20), 
+        Ridge(alpha=1.0)
+    )
+    k = 3
+    scores = cross_val_score(pipeline, X_train, y_train, cv=k, 
+                            scoring='neg_mean_absolute_error')
+    st.write(f'MAE for {k} folds:', -scores)
+    plt.figure(figsize=(8, 12))
+    df.groupby('CREDITCARD_TYPE')['Beer'].mean().sort_values().plot.barh()
+    plt.title('Average Beer Expenditure by Credit Card Type')
+    plt.xlabel('Average Beer Expenditure')
+    plt.ylabel('Credit Card Type')
+
+    # Display the plot in Streamlit
+    st.pyplot()
+
+    # Set the title for the Streamlit app
+    st.title("Average Expenditure on Beer by Credit Card")
+
+    # Calculate mean expenditure on beer grouped by credit card type
+    mean_expenditure = df.groupby('CREDITCARD_TYPE')['Beer'].mean().sort_values()
+
+    # Create a horizontal bar chart using Matplotlib
+    plt.figure(figsize=(8, 6))
+
+    mean_expenditure.plot(kind='barh', color='yellow')
+
+    plt.title('Average Expenditure on Beer by Credit Card Type')
+    plt.xlabel('Average Expenditure ($)')
+    plt.ylabel('Credit Card Type')
+    plt.xticks(rotation=45)
+
+    # Show the plot in Streamlit
+    st.markdown(
+    """
+    ***Note***: if we remove the Lotion the model show us that the product where customer expend more money are cleaning products.
+    
+    """)
+    st.pyplot(plt)
+   
+   # Get coefficients and feature names
+    coefficients = pd.Series(model.coef_[0], features)
+
+    # Sort coefficients for better visualization
+    coefficients_sorted = coefficients.sort_values()
+
+    # Create a horizontal bar chart for coefficients
+    plt.figure(figsize=(8, 6))
+    coefficients_sorted.plot(kind='barh', color='skyblue')
+    plt.title('Logistic Regression Coefficients')
+    plt.xlabel('Coefficient Value')
+    plt.ylabel('Features')
+
+    # Show the plot in Streamlit
+    st.pyplot(plt)
+    st.title("""CONCLUSION:""")
+    st.markdown(
+    """ 
+    
+    ***Market Segmentation Analysis:***
+    This study serves as a decision-making tool for market segmentation, providing insights into niche markets and the characterization of the target audience. The model demonstrated a precision of 0.95, indicating that the strategies developed can be effectively supported by identifying best-selling products, understanding the target community, and considering the relevant age demographics.
+    Our findings reveal that the Baby Boomer generation remains a significant consumer group, surpassing other generations in terms of purchasing power. This demographic tends to be less price-sensitive, demonstrating a willingness to spend on products without much hesitation. As such, hygiene products and fragrances represent promising market opportunities.
+    Conversely, Generation Z has transformed the purchasing landscape. This generation is less reliant on physical retail locations for acquiring products. However, when it comes to categories like lotions and similar items, there is still a strong preference for purchasing in physical stores. This highlights the need for businesses to maintain physical facilities to cater to this demand while also adapting to the evolving shopping behaviors of younger consumers.
+    """)
 
 if __name__ == "__main__":
      main()
