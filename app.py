@@ -482,8 +482,22 @@ def Sales():
     </style>
     '''
     st.markdown(page_bg_img, unsafe_allow_html=True)
-    st.markdown("<h1 style='text-align: center; color: #002966;'>Customer demographics and sales in United States</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #002966;'>Customer demographics</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #002966;'>Sales in United States</h1>", unsafe_allow_html=True)
+    st.markdown(
+    """
+    ***Business Understanding***
 
+    This project begins with the premise that the company is preparing to launch a new product. To ensure its success, a comprehensive market segmentation study is essential. This study aims to answer several key questions:
+    
+    ***Market Niche Identification***: What specific market niche will the new product target?
+    ***Product Offering Locations***: Where will the product be offered to maximize reach and impact?
+    ***Target Market Characteristics***: What are the defining characteristics of the target market and consumers?
+    
+    To achieve these objectives, a relevant database has been selected that provides insights into demographic composition, sales data, and consumer behavior patterns. This database will help us understand what customers consume on a daily basis.
+    Ultimately, the company will leverage the findings from this analysis, supported by the expertise of data scientists and their algorithms, to inform strategic actions and decisions for the successful launch of the new product. 
+
+    """)
     raw_df = pd.read_csv('https://raw.githubusercontent.com/IBM/analyze-customer-data-spark-pixiedust/master/data/customers_orders1_opt.csv')
     st.write(raw_df)
 
@@ -496,6 +510,10 @@ def Sales():
                         'ORDER_VALUE', 'T_TYPE', 'PURCHASE_STATUS', 'CUSTNAME', 'CREDITCARD_NUMBER'])
     df = pd.DataFrame(df)
     st.write(df)
+    st.markdown(
+    """
+    ***Data set Description*** :The data set Customer demographics and sales has 13.733 rows and 62 columns, but after cleanned data set has 36 row: 
+    """)
     st.write("Columns and Rows", df.shape)
     st.write(df.count())
     st.write(df.describe())
@@ -510,6 +528,13 @@ def Sales():
        'Spices']]
     
     correlation_matrix = data.corr(method='pearson')
+    st.markdown(
+    """
+    ***Correlation Analysis***:
+    Correlation is a statistical measure that helps assess the linear relationship between two quantitative variables. A positive correlation occurs when both variables move in the same direction; as one variable increases, the other also increases. Conversely, a negative correlation indicates that as one variable increases, the other decreases.
+    In our analysis of the relationship between wine and fresh vegetables, we observe a negative correlation coefficient of -0.022. This suggests that as customers purchase more wine, their purchases of fresh vegetables tend to decrease. This finding highlights an inverse relationship between these two products, indicating that increased spending on wine may be associated with reduced spending on fresh vegetables. 
+    
+    """)
     st.write("Correlation Matrix:")
     st.write(correlation_matrix)
     
@@ -527,6 +552,25 @@ def Sales():
     covariance_matrix = data.cov()
 
     # Display the covariance matrix in Streamlit
+    st.markdown(
+    """
+    ***Covariance Analysis:***
+    Covariance is a measure used to determine the relationship between two variables. A large covariance indicates a strong relationship between the variables. Specifically, a positive covariance means that the returns of the two products move in the same direction; as one product's return increases, the other product's return also increases. Conversely, a negative covariance indicates that the returns move inversely; when one product's return increases, the other product's return decreases.
+    ***For example***, when analyzing the relationship between beer and fresh vegetables, we find a covariance of 0.004401. This positive value suggests that there is a slight tendency for the returns of beer and fresh vegetables to move together, albeit the relationship is minimal.
+
+    ***The formula is:***
+
+    Cov(X,Y) = Σ E((X-μ)E(Y-ν)) / n-1 where:
+
+    X is a random variable
+
+    E(X) = μ is the expected value (the mean) of the random variable X and
+
+    E(Y) = ν is the expected value (the mean) of the random variable Y
+
+    n = the number of items in the data set
+
+    """)
     st.write("Covariance Matrix:")
     st.write(covariance_matrix)
 
@@ -544,6 +588,20 @@ def Sales():
     st.write('The value of Skewness is:')
     st.write(data.skew())
 
+
+    st.markdown(
+    """ 
+    ***Skewness and Kurtosis Analysis***:
+    Skewness is a statistical measure that assesses the symmetry of a dataset in relation to its mean. In this dataset, certain products such as chips, club soda, and canned foods exhibit a skewness of 0, indicating that their distribution is symmetric.
+    It's important to note that negative skewness suggests that there are more frequent purchases of the product, as it indicates a longer tail on the left side of the distribution. This means that a larger number of customers tend to buy smaller quantities, while fewer customers purchase larger quantities. 
+    
+    ***Kurtosis Analysis***
+
+    Kurtosis measures the "tailedness" of a distribution, indicating how much of the data is concentrated in the tails versus the center. In this analysis, products such as cigarettes and spices exhibit a normal distribution, which is characterized by a kurtosis value close to zero.
+    On the other hand, products like wine, club soda, chips, popcorn, canned foods, and condiments have negative kurtosis. This suggests that these products have limited customer purchases, indicating a flatter distribution with fewer extreme values.
+    In contrast, other products in the dataset show positive kurtosis, implying a sharper peak and heavier tails. This indicates that these products may have more extreme purchase behaviors among customers. 
+    """ 
+    )
     st.write('The value of kurtosis is:')
     st.write(data.kurtosis())
 
@@ -596,6 +654,21 @@ def Sales():
     # Create a cross-tabulation of Gender and Generation
     result = pd.crosstab(df['GenderCode'], df['GENERATION'])
     st.write(result)
+    st.markdown(
+    """ 
+    ***Overall Interpretation:***
+    The Baby Boomer generation shows the highest average spending and variability, indicating they may be more willing to spend on certain products or services compared to other generations.
+    Generation X has both the lowest average and minimum spending, suggesting they may be more conservative in their expenditures.
+
+    Generations Y and Z have similar average spends but show different levels of variability; both have higher averages than Gen X but lower than Baby Boomers.
+
+    The quartile data indicates that while Baby Boomers dominate in higher spending, there are also significant numbers of lower spenders in other generations, particularly Gen X.
+    
+    ***Conclusion***
+
+    This analysis provides valuable insights into generational spending behavior, which can inform marketing strategies, product development, and targeted promotions for different age groups based on their spending patterns and preferences.
+    """
+    )
     st.write(result.describe())
 
     crosstab_reset = result.reset_index()
@@ -613,17 +686,34 @@ def Sales():
 
     # Display the plot in Streamlit
     st.plotly_chart(fig)
-    st.markdown(""" 
+    st.markdown(
+    """ 
+    Interpretation:
+
+    ***Mean Spending***: Baby Boomers have the highest average spending at 1289.75, significantly higher than Gen X, which averages only 461.25.
+    ***Standard Deviation***: Baby Boomers also show a very high standard deviation (1288.71) indicating considerable variability in their spending habits, with some individuals spending much more than others.
+    ***Minimum and Maximum Values***: The minimum value for Gen X is quite low at 40, suggesting some individuals in this generation spend very little.
+    ***Quartiles and Median Values***: The median value for Baby Boomers (1208.5) reinforces their higher average spending, while Gen X has a median of only 423.5, indicating that half of this group spends less than this amount.
     
+    ***Conclusion for Generational Spending:*** This dataset reveals that Baby Boomers are the highest spenders among the generations analyzed, while Gen X shows significantly lower average spending with a wider range of values, indicating more variability in their purchasing behavior.
     
-""")
+    ***Overall Interpretation:***
+    
+    Both datasets highlight significant differences in consumer behavior based on credit card type and generational demographics:
+    
+    -*Higher average spending is associated with certain credit cards (American Express and Diners Club) and with the Baby Boomer generation.
+    
+    -*Variability in spending is also notable, particularly among Baby Boomers and Diners Club users, suggesting diverse purchasing habits within these groups.
+    
+    -*Understanding these patterns can inform targeted marketing strategies and product offerings tailored to specific consumer segments based on their spending behaviors.
+        
+    """)
 
     df = pd.DataFrame(raw_df)
 
     # Create a cross-tabulation of Gender and credit card type
     result = pd.crosstab(df['GENERATION'], df['CREDITCARD_TYPE'])
     st.write(result)
-    st.write(result.describe())
 
     crosstab_reset = result.reset_index()
 
@@ -641,12 +731,22 @@ def Sales():
     # Display the plot in Streamlit
     st.write(result.describe())
     st.plotly_chart(fig)
-    st.markdown(""" 
+    st.markdown(
+    """ 
+    ***Conclusion for Demographic Spending:***
+    This dataset reveals that individuals identified as "Mr." and "Mrs." are the highest spenders among the demographic categories analyzed, while "Master" and "Miss" show significantly lower average spending with a wider range of values, indicating more variability in their purchasing behavior.
+    
+    ***Coverall Interpretation:***  Both datasets highlight significant differences in consumer behavior based on credit card type and demographic categories:
+    
+    *Higher average spending is associated with certain credit cards (American Express and Diners Club) and with individuals identified as "Mr." and "Mrs."
+    
+    *Variability in spending is also notable, particularly among these higher-spending groups, suggesting diverse purchasing habits within these segments.
+    
+    *Understanding these patterns can inform targeted marketing strategies and product offerings tailored to specific consumer segments based on their spending behaviors.
     
     """)
     ccg = pd.crosstab(df['CREDITCARD_TYPE'], df['GenderCode'])
     st.write(ccg)
-    st.write(ccg.describe())
 
     crosstab_reset = ccg.reset_index()
 
@@ -860,68 +960,65 @@ def Sales():
     # Display the figure in Streamlit
     st.plotly_chart(fig)
 
-    import plotly.express as px
+    # import folium
+    # from folium.plugins import MarkerCluster
+    # from geopy.geocoders import Nominatim
+    # from geopy.geocoders import Nominatim
 
-    # Example: Time Series Analysis of Total Sales
-    fig = px.line(df, x='ORDER_DATE', y='ORDER_VALUE', title='Total Sales Over Time')
-    st.plotly_chart(fig)
+    # # Set a custom user agent
 
-    # Example: Bar Chart of Top 10 Products by Sales
-    top_10_products = df.groupby('GenderCode')['ORDER_VALUE'].sum().sort_values(ascending=False).head(10)
-    fig = px.bar(top_10_products, x=top_10_products.index, y='ORDER_VALUE', title='Top 10 Products by Sales')
-    st.plotly_chart(fig)
+    # geolocator = Nominatim(user_agent="my_app_name")
 
+    
+    # location = geolocator.geocode("350 5th Ave, New York, NY 10118")
+    
+    # # Initialize geocoder
+    # # geolocator = Nominatim(user_agent="geoapiExercises")
 
-    import folium
-    from folium.plugins import MarkerCluster
-    from geopy.geocoders import Nominatim
-    # Initialize geocoder
-    geolocator = Nominatim(user_agent="geoapiExercises")
+    # # Function to get latitude and longitude from postal code
+    # def get_lat_long(postal_code):
+    #     location = geolocator.geocode(postal_code)
+    #     if location:
+    #         return location.latitude, location.longitude
+    #     else:
+    #         return None, None
 
-    # Function to get latitude and longitude from postal code
-    def get_lat_long(postal_code):
-        location = geolocator.geocode(postal_code)
-        if location:
-            return location.latitude, location.longitude
-        else:
-            return None, None
+    # # Add latitude and longitude columns to the DataFrame
+    # df['LATITUDE'], df['LONGITUDE'] = zip(*df['POSTAL_CODE_PLUS4'].apply(get_lat_long))
 
-    # Add latitude and longitude columns to the DataFrame
-    df['LATITUDE'], df['LONGITUDE'] = zip(*df['POSTAL_CODE_PLUS4'].apply(get_lat_long))
+    # # Set the title for the Streamlit app
+    # st.title("Customer Location and Product Sales Analysis")
 
-    # Set the title for the Streamlit app
-    st.title("Customer Location and Product Sales Analysis")
+    # # Create a Folium map
+    # m = folium.Map(location=[df['LATITUDE'].mean(), df['LONGITUDE'].mean()], zoom_start=4)
+    # marker_cluster = MarkerCluster().add_to(m)
 
-    # Create a Folium map
-    m = folium.Map(location=[df['LATITUDE'].mean(), df['LONGITUDE'].mean()], zoom_start=4)
-    marker_cluster = MarkerCluster().add_to(m)
+    # # Add markers for each customer location
+    # for idx, row in df.iterrows():
+    #     if pd.notnull(row['LATITUDE']) and pd.notnull(row['LONGITUDE']):
+    #         folium.Marker(
+    #             location=[row['LATITUDE'], row['LONGITUDE']],
+    #             popup=f"{row['POSTAL_CODE_PLUS4']}, {row['CITY']}",
+    #             icon=folium.Icon(color='blue')
+    #         ).add_to(marker_cluster)
 
-    # Add markers for each customer location
-    for idx, row in df.iterrows():
-        if pd.notnull(row['LATITUDE']) and pd.notnull(row['LONGITUDE']):
-            folium.Marker(
-                location=[row['LATITUDE'], row['LONGITUDE']],
-                popup=f"{row['POSTAL_CODE_PLUS4']}, {row['CITY']}",
-                icon=folium.Icon(color='blue')
-            ).add_to(marker_cluster)
+    # # Display the map in Streamlit
+    # st.subheader("Customer Locations")
+    # st.markdown("### Click on the markers to see customer addresses.")
+    # st_folium = st.components.v1.html(m._repr_html_(), height=500)
 
-    # Display the map in Streamlit
-    st.subheader("Customer Locations")
-    st.markdown("### Click on the markers to see customer addresses.")
-    st_folium = st.components.v1.html(m._repr_html_(), height=500)
+    # # Create a bar chart for product sales
+    # product_sales = df[['Lotion', 'Beer']].sum().reset_index()
+    # product_sales.columns = ['Product', 'Sales']
 
-    # Create a bar chart for product sales
-    product_sales = df[['Lotion', 'Beer']].sum().reset_index()
-    product_sales.columns = ['Product', 'Sales']
+    # fig = px.bar(product_sales, x='Product', y='Sales',
+    #             title='Total Sales by Product',
+    #             labels={'Sales': 'Total Sales'},
+    #             color='Product')
 
-    fig = px.bar(product_sales, x='Product', y='Sales',
-                title='Total Sales by Product',
-                labels={'Sales': 'Total Sales'},
-                color='Product')
-
-    # Show the bar chart in Streamlit
-    st.subheader("Product Sales Overview")
-    st.plotly_chart(fig)
+    # # Show the bar chart in Streamlit
+    # st.subheader("Product Sales Overview")
+    # st.plotly_chart(fig)
 
     st.markdown(
     """ 
@@ -1059,6 +1156,44 @@ def Sales():
     y_pred_train = model.predict(X_train_encoded)
     y_pred_val = model.predict(X_val_encoded)
 
+    st.markdown(
+    """ 
+    Interpreting the results of the model's performance metrics involves understanding what each metric means and how they relate to the model's predictive accuracy. Here’s a breakdown of the metrics:
+   
+    1. Root Mean Squared Error (RMSE)
+
+    Train RMSE: 0.2235
+    Validation RMSE: 0.2194
+
+    Interpretation: RMSE measures the average magnitude of the errors between predicted and actual values, with a lower value indicating better model performance.
+    In this case, both the training and validation RMSE values are relatively close, suggesting that the model performs similarly on both datasets.
+    The values indicate that, on average, the model's predictions deviate from the actual values by approximately 0.22 units.
+    
+    2. Mean Absolute Error (MAE)
+
+    Train MAE: 0.0500
+    Validation MAE: 0.0482
+
+    Interpretation: MAE measures the average absolute errors between predicted and actual values, providing a straightforward interpretation of errors in the same units as the target variable.
+    The MAE values are also close for both training and validation sets, indicating consistent performance across datasets.
+    The small MAE values (around 0.05) suggest that, on average, the predictions are off by about 0.05 units.
+
+    3. R² Score
+
+    Train R² Score: -0.0526
+    Validation R² Score: -0.0506
+
+    Interpretation: The R² score indicates how well the independent variables explain the variance in the dependent variable. An R² score of 1 indicates perfect prediction, while a score of 0 indicates that the model does not explain any variance.
+    Negative R² scores suggest that the model is performing worse than a simple mean-based prediction (i.e., predicting the mean value for all observations). This is concerning as it indicates that your model may not be capturing any useful information from the features or may be poorly specified.
+    Overall Interpretation. 
+
+    Model Performance: The RMSE and MAE indicate that while your model has relatively low average errors, it is not performing significantly better than random guessing based on the negative R² scores.
+    
+    Potential Issues: The negative R² scores suggest that there may be issues with model specification, feature selection, or data quality. It could indicate that important predictors are missing or that there is noise in the data affecting predictions.
+    
+    In summary, while your RMSE and MAE metrics suggest reasonable prediction accuracy, the negative R² scores indicate significant room for improvement in your model's predictive capability.
+    """)
+
     st.write(f'Logistic Regression with {len(features)} features: {features}')
     st.write('______________________________________________')
     st.write('Train Root Mean Squared Error:', 
@@ -1069,13 +1204,6 @@ def Sales():
     st.write('Train R^2 Score:', r2_score(y_train, y_pred_train))
     st.write('Validation R^2 Score:', r2_score(y_val, y_pred_val))
 
-    # Set the title for the Streamlit app
-    # st.title("Product Preference Comparison")
-    # for col in sorted(df.columns):
-    #     if df[col].nunique() <= 20:
-    #         sns.catplot(x=col, y='Lotion', data=df, kind='bar', color='yellow')
-    #         plt.xticks(rotation=45)
-    #         st.pyplot() #Graphic analysis the principal product lotioon compared with the other products and differents variance.
     @st.cache_data
     def create_lotion_comparison_plots(df):
         for col in sorted(df.columns):
@@ -1091,6 +1219,7 @@ def Sales():
                 st.pyplot(fig)
 
     st.title('Lotion Comparison Analysis')
+
     # Assuming you have your DataFrame 'df' loaded
     if st.cache(allow_output_mutation=True):  # Cache the DataFrame to improve performance
             df = pd.read_csv('https://raw.githubusercontent.com/IBM/analyze-customer-data-spark-pixiedust/master/data/customers_orders1_opt.csv')  # Replace with your data loading logic
@@ -1133,14 +1262,6 @@ def Sales():
     scores = cross_val_score(pipeline, X_train, y_train, cv=k, 
                             scoring='neg_mean_absolute_error')
     st.write(f'MAE for {k} folds:', -scores)
-    plt.figure(figsize=(8, 12))
-    df.groupby('CREDITCARD_TYPE')['Beer'].mean().sort_values().plot.barh()
-    plt.title('Average Beer Expenditure by Credit Card Type')
-    plt.xlabel('Average Beer Expenditure')
-    plt.ylabel('Credit Card Type')
-
-    # Display the plot in Streamlit
-    st.pyplot()
 
     # Set the title for the Streamlit app
     st.title("Average Expenditure on Beer by Credit Card")
