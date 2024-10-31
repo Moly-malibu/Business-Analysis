@@ -14,6 +14,7 @@ import seaborn as sns
 import sklearn
 sklearn.set_config(transform_output="pandas")
 import category_encoders as ce
+sklearn.set_config(transform_output="pandas")
 from sklearn.impute import SimpleImputer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import make_pipeline
