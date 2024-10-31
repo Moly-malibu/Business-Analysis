@@ -1196,7 +1196,7 @@ def Sales():
     In summary, while your RMSE and MAE metrics suggest reasonable prediction accuracy, the negative R² scores indicate significant room for improvement in your model's predictive capability.
     """)
 
-    st.write(f'Logistic Regression with {len(features)} features: {features}')
+    # st.write(f'Logistic Regression with {len(features)} features: {features}')
     st.write('______________________________________________')
     st.write('Train Root Mean Squared Error:', 
         np.sqrt(mean_squared_error(y_train, y_pred_train)))
