@@ -221,13 +221,13 @@ def AgroBusiness():
 
     # Create a figure
     st.subheader("Agro Products by Country")
-    grouped = df.groupby(['Area', 'Item']).agg({'Total Production': 'sum'}).reset_index()
+    grouped = df.groupby(['Area', 'Item', 'Element']).agg({'Total Production': 'sum'}).reset_index()
 
     # Add a dropdown to select the x-axis column
     x_axis_column = st.selectbox('Area', grouped.columns)
 
     # Add a dropdown to select the y-axis column
-    y_axis_column = st.selectbox('Toal Production', grouped.columns)
+    y_axis_column = st.selectbox('Total Production', grouped.columns)
 
     # Create the Plotly figure
     fig = px.scatter(grouped, x=x_axis_column, y=y_axis_column, title='Interactive Scatter Plot')
@@ -828,9 +828,6 @@ def Sales():
     st.markdown(""" 
 
     """)
-
-
-
     pg = pd.crosstab(df['GenderCode'], df['PURCHASE_TOUCHPOINT'])
     st.write(pg)
 
@@ -850,7 +847,6 @@ def Sales():
 
     """)
 
-    
     # Assuming 'tab6' is your DataFrame
     sns.catplot(x='Desktop', y='Phone', kind='bar', data=pg, height=7)
 
@@ -858,7 +854,6 @@ def Sales():
     st.pyplot(plt.gcf())
     st.markdown(
     """ 
-
 
     """)
     pp = pd.crosstab(df['Pet Supplies'], df['PURCHASE_TOUCHPOINT'])
@@ -932,22 +927,37 @@ def Sales():
 
     """)
 
-   
-
-    st.markdown(""" 
-
-    """)
-
     
     # Create a figure
     st.subheader("Summary")
-    grouped = df.groupby(['ORDER_TYPE', 'PURCHASE_TOUCHPOINT', 'CREDITCARD_TYPE', 'STATE']).agg({'GenderCode': 'sum'}).reset_index()
+    grouped = df.groupby(['ORDER_TYPE', 'PURCHASE_TOUCHPOINT', 'CREDITCARD_TYPE', 'AGE', 'ORDER_VALUE']).agg({'CITY': 'sum'}).reset_index()
 
     # Add a dropdown to select the x-axis column
-    x_axis_column = st.selectbox('GenderCode', grouped.columns)
+    x_axis_column = st.selectbox('Select 1 option', grouped.columns)
 
     # Add a dropdown to select the y-axis column
-    y_axis_column = st.selectbox('Generation', grouped.columns)
+    y_axis_column = st.selectbox('Select 2 option', grouped.columns)
+
+    # Create the Plotly figure
+    fig = px.scatter(grouped, x=x_axis_column, y=y_axis_column, title='Interactive Scatter Plot')
+
+    # Customize the figure (optional)
+    fig.update_layout(
+        xaxis_title=x_axis_column,
+        yaxis_title=y_axis_column
+    )
+    # Display the figure in Streamlit
+    st.plotly_chart(fig)
+
+    ######################
+
+    grouped = df.groupby(['ADDRESS1', 'COUNTRY_CODE', 'POSTAL_CODE', 'POSTAL_CODE_PLUS4', 'CITY','STATE']).agg({'ORDER_VALUE': 'sum'}).reset_index()
+
+    # Add a dropdown to select the x-axis column
+    x_axis_column = st.selectbox('Select 1 option', grouped.columns)
+
+    # Add a dropdown to select the y-axis column
+    y_axis_column = st.selectbox('Select 2 option', grouped.columns)
 
     # Create the Plotly figure
     fig = px.scatter(grouped, x=x_axis_column, y=y_axis_column, title='Interactive Scatter Plot')
@@ -961,64 +971,65 @@ def Sales():
     st.plotly_chart(fig)
 
     # import folium
-    # from folium.plugins import MarkerCluster
+    # from geopy.geocoders import GoogleV3
+    # from geopy.exc import GeocoderTimedOut
     # from geopy.geocoders import Nominatim
-    # from geopy.geocoders import Nominatim
 
-    # # Set a custom user agent
+    # # Load your dataset from the provided URL
+    # data_url = "https://raw.githubusercontent.com/IBM/analyze-customer-data-spark-pixiedust/master/data/customers_orders1_opt.csv"
+    # raw_df = pd.read_csv(data_url)
 
-    # geolocator = Nominatim(user_agent="my_app_name")
+    # # Display the first few rows of the dataframe for reference
+    # st.title("Customer Orders Map")
+    # st.write(raw_df.head())
 
-    
-    # location = geolocator.geocode("350 5th Ave, New York, NY 10118")
-    
-    # # Initialize geocoder
-    # # geolocator = Nominatim(user_agent="geoapiExercises")
+    # # Initialize geocoder with Google Maps API (replace 'YOUR_API_KEY' with your actual key)
+    # from geopy.geocoders import OpenCage
 
-    # # Function to get latitude and longitude from postal code
-    # def get_lat_long(postal_code):
-    #     location = geolocator.geocode(postal_code)
-    #     if location:
-    #         return location.latitude, location.longitude
-    #     else:
-    #         return None, None
+    # geolocator = OpenCage("6fb4c2fa7c3d4fafa44a5c45752dcb97")
+    # location = geolocator.geocode("1600 Amphitheatre Parkway, Mountain View, CA")
 
-    # # Add latitude and longitude columns to the DataFrame
-    # df['LATITUDE'], df['LONGITUDE'] = zip(*df['POSTAL_CODE_PLUS4'].apply(get_lat_long))
+    # # Function to get latitude and longitude from address components
+    # def get_lat_long(row):
+    #     try:
+    #         address = f"{row['ADDRESS1']}, {row['CITY']}, {row['COUNTRY_CODE']} {row['POSTAL_CODE']}"
+    #         location = geolocator.geocode(address)
+    #         if location:
+    #             return location.latitude, location.longitude
+    #         else:
+    #             return None, None
+    #     except GeocoderTimedOut:
+    #         return get_lat_long(row)  # Retry on timeout
 
-    # # Set the title for the Streamlit app
-    # st.title("Customer Location and Product Sales Analysis")
+    # # Ensure your DataFrame has the necessary columns for geocoding
+    # if 'ADDRESS1' in raw_df.columns and 'CITY' in raw_df.columns and 'COUNTRY_CODE' in raw_df.columns and 'POSTAL_CODE' in raw_df.columns:
+    #     # Add latitude and longitude columns to the DataFrame
+    #     raw_df['LATITUDE'], raw_df['LONGITUDE'] = zip(*raw_df.apply(get_lat_long, axis=1))
 
-    # # Create a Folium map
-    # m = folium.Map(location=[df['LATITUDE'].mean(), df['LONGITUDE'].mean()], zoom_start=4)
-    # marker_cluster = MarkerCluster().add_to(m)
+    #     # Create a Folium map centered around the average latitude and longitude
+    #     m = folium.Map(location=[raw_df['LATITUDE'].mean(), raw_df['LONGITUDE'].mean()], zoom_start=4)
 
-    # # Add markers for each customer location
-    # for idx, row in df.iterrows():
-    #     if pd.notnull(row['LATITUDE']) and pd.notnull(row['LONGITUDE']):
-    #         folium.Marker(
-    #             location=[row['LATITUDE'], row['LONGITUDE']],
-    #             popup=f"{row['POSTAL_CODE_PLUS4']}, {row['CITY']}",
-    #             icon=folium.Icon(color='blue')
-    #         ).add_to(marker_cluster)
+    #     # Add markers for each customer location
+    #     for idx, row in raw_df.iterrows():
+    #         if pd.notnull(row['LATITUDE']) and pd.notnull(row['LONGITUDE']):
+    #             folium.Marker(
+    #                 location=[row['LATITUDE'], row['LONGITUDE']],
+    #                 popup=f"{row['ADDRESS1']}, {row['CITY']}, {row['COUNTRY_CODE']} {row['POSTAL_CODE']}",
+    #                 icon=folium.Icon(color='blue')
+    #             ).add_to(m)
 
-    # # Display the map in Streamlit
-    # st.subheader("Customer Locations")
-    # st.markdown("### Click on the markers to see customer addresses.")
-    # st_folium = st.components.v1.html(m._repr_html_(), height=500)
+    #     # Display the map in Streamlit
+    #     st.subheader("Customer Locations")
+    #     st.markdown("### Click on the markers to see customer addresses.")
+    #     st_folium = st.components.v1.html(m._repr_html_(), height=500)
 
-    # # Create a bar chart for product sales
-    # product_sales = df[['Lotion', 'Beer']].sum().reset_index()
-    # product_sales.columns = ['Product', 'Sales']
+    # else:
+    #     st.error("The required address columns are not present in the dataset.")
 
-    # fig = px.bar(product_sales, x='Product', y='Sales',
-    #             title='Total Sales by Product',
-    #             labels={'Sales': 'Total Sales'},
-    #             color='Product')
+    # # Optionally display the DataFrame for reference
+    # st.write("DataFrame:")
+    # st.write(raw_df[['ADDRESS1', 'CITY', 'COUNTRY_CODE', 'POSTAL_CODE', 'LATITUDE', 'LONGITUDE']])
 
-    # # Show the bar chart in Streamlit
-    # st.subheader("Product Sales Overview")
-    # st.plotly_chart(fig)
 
     st.markdown(
     """ 
@@ -1312,5 +1323,6 @@ def Sales():
     Conversely, Generation Z has transformed the purchasing landscape. This generation is less reliant on physical retail locations for acquiring products. However, when it comes to categories like lotions and similar items, there is still a strong preference for purchasing in physical stores. This highlights the need for businesses to maintain physical facilities to cater to this demand while also adapting to the evolving shopping behaviors of younger consumers.
     """)
 
+    
 if __name__ == "__main__":
      main()
