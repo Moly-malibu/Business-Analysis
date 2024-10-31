@@ -19,7 +19,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import r2_score
 from xgboost import XGBRegressor
-
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
