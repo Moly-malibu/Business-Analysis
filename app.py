@@ -1,12 +1,14 @@
 import streamlit as st
-import streamlit.components.v1 as components 
+import streamlit.components.v1 as components
+import datetime 
 from datetime import datetime
-import datetime
+
 import requests
 from requests import get
 import pandas as pd
 import numpy as np
 
+import seaborn as sns
 
 # Model
 import sklearn
@@ -15,6 +17,18 @@ import category_encoders as ce
 from sklearn.impute import SimpleImputer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import make_pipeline
+from sklearn.metrics import r2_score
+from xgboost import XGBRegressor
+
+from sklearn.linear_model import LogisticRegressionCV
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+from sklearn.feature_selection import f_regression, SelectKBest
+from sklearn.linear_model import Ridge
+from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import cross_val_score
 
 # Graph
 import itertools
@@ -274,7 +288,7 @@ def AgroBusiness():
         The main agricultural producer has been China and the smallest has been British Virgin Island.                
 
     """)
-    import seaborn as sns
+    
     st.title("Box Plot and Histogram:")
     # Box plot
     st.header("Box Plot")
@@ -337,7 +351,7 @@ def AgroBusiness():
     items1 = df['Item'].value_counts()
     st.write("Subclassification:", items1)
 
-
+    #training dataset
     test = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1) 
     val = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1)  
     train = pd.read_csv('https://raw.githubusercontent.com/Moly-malibu/agriculture-crop-production/master/agriculture-crop-production%20(11).csv').drop(['Unnamed: 0'], axis=1)
@@ -399,8 +413,7 @@ def AgroBusiness():
     st.pyplot(fig)    
 
     #XGBoost dominates structured or tabular datasets on classification and regression predictive modeling problems.
-    from sklearn.metrics import r2_score
-    from xgboost import XGBRegressor
+    
 
     gb = make_pipeline(
         ce.OrdinalEncoder(), 
@@ -583,8 +596,6 @@ def Sales():
 
     # Show the heatmap in Streamlit
     st.pyplot(plt)
-
-
     st.write('The value of Skewness is:')
     st.write(data.skew())
 
@@ -676,7 +687,7 @@ def Sales():
     # Melt the crosstab for seaborn compatibility
     melted_crosstab = crosstab_reset.melt(id_vars='GenderCode', var_name='GENERATION', value_name='Count')
 
-    import plotly.express as px
+    
 
     # Assuming you have your melted_crosstab DataFrame ready
 
@@ -720,9 +731,6 @@ def Sales():
     # Melt the crosstab for seaborn compatibility
     melted_crosstab = crosstab_reset.melt(id_vars='GENERATION', var_name='CREDITCARD_TYPE', value_name='Count')
 
-    import plotly.express as px
-
-    # Assuming you have your melted_crosstab DataFrame ready
 
     # Create the box plot
     fig = px.box(melted_crosstab, x="GENERATION", y="Count", color="CREDITCARD_TYPE",
@@ -753,9 +761,6 @@ def Sales():
     # Melt the crosstab for seaborn compatibility
     melted_crosstab = crosstab_reset.melt(id_vars='CREDITCARD_TYPE', var_name='GenderCode', value_name='Count')
 
-    import plotly.express as px
-
-    # Assuming you have your melted_crosstab DataFrame ready
 
     # Create the box plot
     fig = px.box(melted_crosstab, x="CREDITCARD_TYPE", y="Count", color="GenderCode",
@@ -776,10 +781,6 @@ def Sales():
 
     # Melt the crosstab for seaborn compatibility
     melted_crosstab = crosstab_reset.melt(id_vars='GenderCode', var_name='ORDER_TYPE', value_name='Count')
-
-    import plotly.express as px
-
-    # Assuming you have your melted_crosstab DataFrame ready
 
     # Create the box plot
     fig = px.box(melted_crosstab, x="GenderCode", y="Count", color="ORDER_TYPE",
@@ -930,7 +931,12 @@ def Sales():
     
     # Create a figure
     st.subheader("Summary")
-    grouped = df.groupby(['ORDER_TYPE', 'PURCHASE_TOUCHPOINT', 'CREDITCARD_TYPE', 'AGE', 'ORDER_VALUE']).agg({'CITY': 'sum'}).reset_index()
+    st.markdown(
+    """ 
+    In this scatter plot, you can analyze different perspectives from the dataset by selecting various variables based on the information you need to examine
+
+    """)
+    grouped = df.groupby(['ORDER_TYPE', 'PURCHASE_TOUCHPOINT', 'CREDITCARD_TYPE', 'AGE', 'ORDER_VALUE', 'GenderCode', 'GENERATION']).agg({'CITY': 'sum'}).reset_index()
 
     # Add a dropdown to select the x-axis column
     x_axis_column = st.selectbox('Select 1 option', grouped.columns)
@@ -951,7 +957,7 @@ def Sales():
 
     ######################
 
-    grouped = df.groupby(['ADDRESS1', 'COUNTRY_CODE', 'POSTAL_CODE', 'POSTAL_CODE_PLUS4', 'CITY','STATE']).agg({'ORDER_VALUE': 'sum'}).reset_index()
+    grouped = df.groupby(['ADDRESS1', 'COUNTRY_CODE', 'POSTAL_CODE', 'POSTAL_CODE_PLUS4', 'CITY','STATE', 'GenderCode', 'GENERATION']).agg({'ORDER_VALUE': 'sum'}).reset_index()
 
     # Add a dropdown to select the x-axis column
     x_axis_column = st.selectbox('Select 1 option', grouped.columns)
@@ -1087,13 +1093,9 @@ def Sales():
     train_set = product_df.sample(frac=0.75, random_state=0)
     test_set  = product_df.drop(train_set.index)
 
-
     target = 'Lotion'  #create the target and train set.
     y_train = train_set[target]
     y_train.value_counts(normalize=True)
-    
-    from sklearn.linear_model import LogisticRegressionCV
-    from sklearn.model_selection import train_test_split
 
     linear_reg = LogisticRegressionCV() #create the model.
     train_set, val = train_test_split(train_set, random_state=42)
@@ -1113,9 +1115,6 @@ def Sales():
     X_val = val[features]
     y_val = val[target]
 
-    from sklearn.impute import SimpleImputer
-    from sklearn.linear_model import LogisticRegressionCV
-    from sklearn.preprocessing import StandardScaler
 
     imputer = SimpleImputer () #impute missiing values
     X_train_imputed = imputer.fit_transform(X_train)
@@ -1149,20 +1148,12 @@ def Sales():
 
     """)
 
-    import category_encoders as ce
-    from sklearn.metrics import r2_score
-
     encoder = ce.OneHotEncoder(use_cat_names=True) #Encoder and fit transform method with train set/val
     X_train_encoded = encoder.fit_transform(X_train)
     X_val_encoded = encoder.transform(X_val)
 
     linear = LogisticRegressionCV() #Logistic Regression 
     linear.fit(X_train_encoded, y_train)
-
-
-    import numpy as np
-    from sklearn.metrics import mean_squared_error
-    from sklearn.metrics import mean_absolute_error
 
     y_pred_train = model.predict(X_train_encoded)
     y_pred_val = model.predict(X_val_encoded)
@@ -1255,12 +1246,6 @@ def Sales():
 
     ***Calculate Negative Mean Absolute Error***:
     """)
-    import category_encoders as ce
-    from sklearn.feature_selection import f_regression, SelectKBest
-    from sklearn.linear_model import Ridge
-    from scipy.stats import randint, uniform
-    from sklearn.pipeline import make_pipeline
-    from sklearn.model_selection import cross_val_score
 
     pipeline = make_pipeline(
         ce.OneHotEncoder(use_cat_names=True), 
@@ -1291,11 +1276,6 @@ def Sales():
     plt.xticks(rotation=45)
 
     # Show the plot in Streamlit
-    st.markdown(
-    """
-    ***Note***: if we remove the Lotion the model show us that the product where customer expend more money are cleaning products.
-    
-    """)
     st.pyplot(plt)
    
    # Get coefficients and feature names
@@ -1312,6 +1292,11 @@ def Sales():
     plt.ylabel('Features')
 
     # Show the plot in Streamlit
+    st.markdown(
+    """
+    ***Note***: if we remove the Lotion the model show us that the product where customer expend more money are cleaning products.
+    
+    """)
     st.pyplot(plt)
     st.title("""CONCLUSION:""")
     st.markdown(
