@@ -9,3 +9,4 @@ PyYAML>=3.10
 category_encoders
 xgboost
 plotly
+datetime
