@@ -6,3 +6,4 @@ seaborn
 scikit-learn
 Pillow
 PyYAML>=3.10
+category_encoders
