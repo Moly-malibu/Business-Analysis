@@ -1,7 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
-import datetime 
-from datetime import datetime
+
 
 import requests
 from requests import get
@@ -118,7 +117,7 @@ def Home():
 
         By carefully considering these factors, businesses can not only capitalize on agricultural trends but also make a positive impact on society through food security, environmental sustainability, and ethical practices.                
         """)
-        today = st.date_input('Today is', datetime.datetime.now())
+        # today = st.date_input('Today is', datetime.datetime.now())
 
         footer_temp1 = """
             <!-- CSS  -->
