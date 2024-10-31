@@ -4,3 +4,5 @@ numpy
 matplotlib 
 seaborn 
 scikit-learn
+Pillow
+PyYAML>=3.10
